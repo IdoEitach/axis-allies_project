@@ -86,28 +86,36 @@ void RiskGame::handlePlayingPhase() {
 
 		while (keepAttacking) {
 			board.setPhase(Phase::ChooseTerritoryToAttackFrom);
-			int forcesToAttackWith;
+			int forcesToAttackWith , forcesToDefenceWith;
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 			Territory* chosenToAttackFrom = ChoosingTeritorryToAttackFrom(&forcesToAttackWith);
 			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
 			board.setPhase(Phase::ChooseTerritoryToAttack);
-			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom);
+			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom , forcesToDefenceWith);
 
 			int valueAttackers[3] = { 0 };
 			int valueDefenders[2] = { 0 };
 			board.RollCubes();
 
-			valueDefenders[0] = GetRandomValue(1, 6);
-			valueDefenders[1] = GetRandomValue(1, 6);
 
 			for (int i = 0; i < forcesToAttackWith; i++) {
 				valueAttackers[i] = GetRandomValue(1, 6);
 			}
-			
+
 			qsort(valueAttackers, forcesToAttackWith, sizeof(int), compare);
 			for (int i = 0; i < forcesToAttackWith; i++) {
 				std::cout << "the value of the attacker dice number " << i << " is: " << valueAttackers[i] << std::endl;
 			}
+
+			for (int i = 0; i < forcesToDefenceWith; i++) {
+				valueDefenders[i] = GetRandomValue(1, 6);
+			}
+
+			qsort(valueDefenders, forcesToDefenceWith, sizeof(int), compare);
+			for (int i = 0; i < forcesToDefenceWith; i++) {
+				std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
+			}
+
 			std::string input;
 			std::cout << "Do you want to keep attacking? (y/n): ";
 			std::getline(std::cin, input);
@@ -132,7 +140,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 		deltaTime = GetFrameTime();
 		messageManeger.updateMessages(deltaTime);
 		BeginDrawing();
-		ClearBackground(RAYWHITE);
+
 		messageManeger.drawMessages();
 		board.drawChoosingTerritoryToAttackFrom();
 		clickTerritoryPtr = board.checkClick();
@@ -158,7 +166,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 				deltaTime = GetFrameTime();
 				messageManeger.updateMessages(deltaTime);
 				BeginDrawing();
-				ClearBackground(RAYWHITE);
+				board.drawChoosingTerritoryToAttackFrom();
 				messageManeger.drawMessages();
 				*forcesToAttackWith = board.getInput(clickTerritoryPtr);
 				if (clickTerritoryPtr != nullptr && clickTerritoryPtr->getForces() <= *forcesToAttackWith) {
@@ -178,8 +186,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 	}
 	return nullptr;
 }
-
-Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom) {
+Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom ,int& forcesToDefenceWith) {
 	float deltaTime = 0;
 	bool clickedOnTerritory = false;
 	Territory* clickTerritoryPtr = board.checkClick();
@@ -198,6 +205,8 @@ Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 		else if (clickTerritoryPtr != nullptr && clickTerritoryPtr->getOwner() != currentPlayer) {
 			for (auto& neighbor : board.adjacencyList[chosenTeritorryToAtackFrom->getName()]) {
 				if (neighbor == clickTerritoryPtr->getName()) {
+					forcesToDefenceWith = board.getInput(clickTerritoryPtr);
+					if(forcesToDefenceWith <= clickTerritoryPtr->getForces() )
 					return clickTerritoryPtr;
 				}
 			}
@@ -295,7 +304,10 @@ int main() {
 
 	//ToggleFullscreen();
 
+
 	RiskGame game;
+
+	game.board.displayLoadingScreen();
 
 	game.RunGame();
 

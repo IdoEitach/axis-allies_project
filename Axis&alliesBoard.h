@@ -29,6 +29,7 @@ private:
 public:
     void addTerritory(const std::string& territoryName, int owner, int forces, Vector2 position, Color color);
     void addBorder(const std::string& territoryName1, const std::string& territoryName2);
+    void displayLoadingScreen();
 
 	void drawInitPhase();
 	void drawChoosingTerritoryToReinforce();

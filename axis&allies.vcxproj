@@ -150,6 +150,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Territory.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\97258\AppData\Local\Temp\tank.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

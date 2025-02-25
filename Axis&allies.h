@@ -14,8 +14,9 @@
 
 
 class RiskGame {
-private:
+public:
     RiskBoard board;
+private:
     Player player1{1};
     Player player0{0};
     int currentPlayer;
@@ -32,7 +33,7 @@ public:
     void handleInitializationPhase();
     void handlePlayingPhase();
     Territory* ChoosingTeritorryToAttackFrom(int * forcesToAttackWith);
-    Territory* ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom);
+    Territory* ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom ,int & forcesToDefenceWith);
     void hanleReinforcement();
     void handleEndGamePhase();
     void changePlayerTurn();

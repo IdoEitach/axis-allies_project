@@ -1,6 +1,4 @@
-﻿  axis&allies.cpp
-C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(293,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(293,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+﻿  Axis&alliesBoard.cpp
   axis&allies.vcxproj -> C:\Users\ido\פרויקט\axis-allies_project\x64\Debug\axis&allies.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
