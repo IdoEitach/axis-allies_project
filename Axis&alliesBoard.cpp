@@ -10,7 +10,12 @@ void RiskBoard::addBorder(const std::string& territoryName1, const std::string& 
 	adjacencyList[territoryName2].push_back(territoryName1);
 }
 void RiskBoard::drawBoard() {
-	ClearBackground(RAYWHITE);
+	// Draw background texture scaled to fit the window
+	DrawTexturePro(backgroundTexture,
+		{ 0, 0, static_cast<float>(backgroundTexture.width), static_cast<float>(backgroundTexture.height) },
+		{ 0, 0, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight()) },
+		{ 0, 0 }, 0.0f, WHITE);
+
 	std::string phaseText = "";
 	switch (currentPhase)
 	{
@@ -40,6 +45,8 @@ void RiskBoard::drawBoard() {
 		break;
 	}
 	DrawText(phaseText.c_str(), 200, 20, 20, BLACK);
+
+		DrawText(phaseText.c_str(), 200, 20, 20, BLACK);
 	// Draw borders (connections) first for visual layering
 	for (const auto& adjacencyPair : adjacencyList) {
 		const std::string& territoryName = adjacencyPair.first;
@@ -66,6 +73,19 @@ void RiskBoard::drawBoard() {
 		DrawText(clickedTerritory->getName().c_str(), 10, 10, 20, BLACK);
 	}
 }
+
+
+void RiskBoard::loadTextures() {
+	backgroundTexture = LoadTexture("pics/background.png");
+	territoryTexture = LoadTexture("pics/territory.png");
+}
+
+void RiskBoard::unloadTextures() {
+	UnloadTexture(backgroundTexture);
+	UnloadTexture(territoryTexture);
+}
+
+
 /// <summary>
 /// this function draws the initialization phase
 /// </summary>
@@ -110,7 +130,23 @@ int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
 		DrawCircleV(territory.getPosition(), 25, territory.getColor()); // Larger circle
 		DrawText(territory.getName().c_str(), static_cast<int>(territory.getPosition().x) - 25, static_cast<int>(territory.getPosition().y) - 15, 25, BLACK); // Larger font
 
-		DrawText("Enter the amount of forces :", 200, 40, 20, BLACK);
+		switch (currentPhase)
+		{
+		case ReinforcingAddForces:
+			DrawText("Enter the amount of forces to add :", 200, 40, 20, BLACK);
+			break;
+		case ChooseTerritoryToAttackFrom:
+			DrawText("Enter the amount of forces to attack with :", 200, 40, 20, BLACK);
+			break;
+		case ChooseTerritoryToAttack:
+			DrawText("Enter the amount of forces to defened with :", 200, 40, 20, BLACK);
+			break;
+		case MovingForcesFrom:
+			DrawText("Enter the amount of forces to move :", 200, 40, 20, BLACK);
+			break;
+		}
+
+		
 		DrawRectangle(200, 70, 140, 30, LIGHTGRAY);
 
 		DrawText(inputText, 210, 75, 20, BLACK);
@@ -137,20 +173,28 @@ int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
 		if (IsKeyPressed(KEY_ENTER)) {
 			enterPressed = true;
 		}
-
 		EndDrawing();
 	}
 	return atoi(inputText);
+}
+
+void RiskBoard::drawChoosingTerritoryToMoveFrom() {
+	
+	drawBoard();
+	drawForcesInfo(); // Draw forces information
+
+
 }
 /// <summary>
 /// this function draws the attacking phase
 /// </summary>
 void RiskBoard::drawChoosingTerritoryToAttackFrom() {
-	ClearBackground(RED);
-	drawForcesInfo(); // Draw forces information
+	
 	drawBoard();
+	drawForcesInfo(); // Draw forces information
+	}
 
-}
+
 /// <summary>
 /// this function rolls the dice
 /// and making the dice animation
@@ -170,17 +214,13 @@ void RiskBoard::RollCubes() {
 	Dice3D dice1Attacker({ -1, 0, 0 });
 	Dice3D dice2Attacker({ 1, 0, 0 });
 
-
 	dice1Attacker.StartRoll();
 	dice2Attacker.StartRoll();
-
 
 	while (dice1Attacker.IsRolling() || dice2Attacker.IsRolling()) {
 		deltaTime = GetFrameTime();
 		dice1Attacker.Update(deltaTime);
 		dice2Attacker.Update(deltaTime);
-
-
 		BeginDrawing();
 		ClearBackground(RED);
 
@@ -209,8 +249,7 @@ void RiskBoard::drawForcesInfo() {
 		textColor = BLACK;
 		const Territory& territory = territoryPair.second;
 		if (territory.getName() == clickedTerritory->getName())
-			textColor = RED;
-
+			textColor = RED; // Highlight the selected territory
 
 		std::string info = territory.getName() + ": " + std::to_string(territory.getForces()) + " forces , owner : " + std::to_string(territory.getOwner());
 		DrawText(info.c_str(), 650, yOffset, 20, textColor);
@@ -281,20 +320,32 @@ void RiskBoard::displayLoadingScreen() {
 	float tankSpeed = 200.0f; // Pixels per second
 
 	// Define the duration of the loading screen
-	float loadingDuration = 5.0f; // 3 seconds
+	float loadingDuration = 4.5f; // 3 seconds
+	float fadeDuration = 1.0f; // 1 second for fade-in and fade-out
 	float elapsedTime = 0.0f;
 
-	while (elapsedTime < loadingDuration) {
+	while (elapsedTime < loadingDuration + fadeDuration * 2) {
 		// Update tank position
-		tankX += tankSpeed * GetFrameTime();
+		if (elapsedTime > fadeDuration && elapsedTime < loadingDuration + fadeDuration) {
+			tankX += tankSpeed * GetFrameTime();
+		}
+
+		// Calculate alpha value for fade-in and fade-out
+		float alpha = 1.0f;
+		if (elapsedTime < fadeDuration) {
+			alpha = elapsedTime / fadeDuration;
+		}
+		else if (elapsedTime > loadingDuration + fadeDuration) {
+			alpha = 1.0f - (elapsedTime - (loadingDuration + fadeDuration)) / fadeDuration;
+		}
 
 		// Draw the loading screen
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 
-		// Draw the moving tank
-		DrawTexture(tank, static_cast<int>(tankX), static_cast<int>(tankY), WHITE);
-		DrawText("Loading...", GetScreenWidth() / 2 - MeasureText("Loading...", 20) / 2, static_cast<int>(tankY) + tank.height + 20, 20, BLACK);
+		// Draw the moving tank with fade effect
+		DrawTexture(tank, static_cast<int>(tankX), static_cast<int>(tankY), Fade(WHITE, alpha));
+		DrawText("Loading...", GetScreenWidth() / 2 - MeasureText("Loading...", 20) / 2, static_cast<int>(tankY) + tank.height + 20, 20, Fade(BLACK, alpha));
 
 		EndDrawing();
 
@@ -305,4 +356,3 @@ void RiskBoard::displayLoadingScreen() {
 	// Unload the tank texture
 	UnloadTexture(tank);
 }
-

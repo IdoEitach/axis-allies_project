@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\97258\AppData\Local\Temp\tank.png" />
+    <Image Include="..\..\..\97258\AppData\Local\Temp\background.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

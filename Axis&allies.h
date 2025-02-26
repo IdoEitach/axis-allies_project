@@ -34,8 +34,11 @@ public:
     void handlePlayingPhase();
     Territory* ChoosingTeritorryToAttackFrom(int * forcesToAttackWith);
     Territory* ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom ,int & forcesToDefenceWith);
+	Territory* chossingTerritoryToMoveFrom();
+	Territory* ChoosingTeritorryToMoveTo(Territory* chosenTeritorryToMoveFrom);
     void hanleReinforcement();
     void handleEndGamePhase();
     void changePlayerTurn();
+
     void buildMap();
 };

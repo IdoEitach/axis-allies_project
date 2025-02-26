@@ -21,9 +21,12 @@ class RiskBoard {
 private:
     std::unordered_map<std::string, Territory> territories;
     Territory* clickedTerritory{ new Territory("", 0, 0, {0, 0}, {0, 0, 0, 0}) };
+    Texture2D backgroundTexture;
+    Texture2D territoryTexture;
 public:
     std::unordered_map<std::string, std::vector<std::string>> adjacencyList;
 private:
+
 	Phase currentPhase = InitializingTerritories;
 
 public:
@@ -38,10 +41,17 @@ public:
 	void drawChoosingTerritoryToAttackFrom();
     Territory* getTerritoryByName(const std::string& territoryName) const;
 	void drawChoosingTerritoryToAttack();
+	void drawChoosingTerritoryToMoveFrom();
+	void drawChoosingTerritoryToMoveTo();
     void drawBoard();
     void drawForcesInfo();
     Territory* checkClick();
     void setPhase(Phase newPhase);
     Phase getPhase() const;
     void RollCubes();
+    // Method to load textures
+    void loadTextures();
+
+    // Method to unload textures
+    void unloadTextures();
 };

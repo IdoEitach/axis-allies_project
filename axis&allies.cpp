@@ -123,6 +123,52 @@ void RiskGame::handlePlayingPhase() {
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 	}
+	std::string input;
+	std::cout << "Do you want to move Forces from a territoy? (y/n): ";
+	std::getline(std::cin, input);
+	if (input == "y") {
+		std::cout << "moving forces" << std::endl;
+		
+		board.setPhase(Phase::MovingForcesFrom);
+		Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
+		std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
+		board.setPhase(Phase::MovingForcesTo);
+
+	}
+}
+Territory* RiskGame::chossingTerritoryToMoveFrom() {
+	float deltaTime = 0;
+	
+	Territory* clickTerritoryPtr = board.checkClick();
+
+	while (clickTerritoryPtr == nullptr ) {
+		deltaTime = GetFrameTime();
+		messageManeger.updateMessages(deltaTime);
+		BeginDrawing();
+
+		messageManeger.drawMessages();
+		board.drawChoosingTerritoryToMoveFrom();
+		clickTerritoryPtr = board.checkClick();
+		if (clickTerritoryPtr != nullptr) {
+			if (clickTerritoryPtr->getOwner() != currentPlayer) {
+				clickTerritoryPtr = nullptr;
+				messageManeger.addMessage("You can only move from your own territories", 2.0f);
+			}
+			else if (clickTerritoryPtr->getForces() <= 1) {
+				clickTerritoryPtr = nullptr;
+				messageManeger.addMessage("You can only move from territories with more than one force ", 2.0f);
+			}
+			else {
+				if (!board.hasAdjacentEnemies(clickTerritoryPtr->getName(), currentPlayer^1)) {
+					clickTerritoryPtr = nullptr;
+					messageManeger.addMessage("You can only move from territories with adjacent ownedTerritories", 2.0f);
+				}
+			}
+		}
+		EndDrawing();
+	}
+	
+	return clickTerritoryPtr;
 }
 /// <summary>
 /// this function is to choose the territory to attack from and it choosing how many forces to attack with
@@ -141,8 +187,8 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 		messageManeger.updateMessages(deltaTime);
 		BeginDrawing();
 
-		messageManeger.drawMessages();
 		board.drawChoosingTerritoryToAttackFrom();
+		messageManeger.drawMessages();
 		clickTerritoryPtr = board.checkClick();
 		if (clickTerritoryPtr != nullptr) {
 			if (clickTerritoryPtr->getOwner() != currentPlayer) {
@@ -162,7 +208,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 		}
 		if (clickTerritoryPtr != nullptr) {
 			while (true) {
-				board.drawBoard();
+				
 				deltaTime = GetFrameTime();
 				messageManeger.updateMessages(deltaTime);
 				BeginDrawing();
@@ -301,9 +347,15 @@ int main() {
 	float  screen_height = 779.875/*GetScreenWidth()*/;
 	InitWindow(screen_width, screen_height, "Risk Game Map");
 	SetTargetFPS(140);
+
 	RiskGame game;
+	game.board.loadTextures(); // Load textures
+
 	game.board.displayLoadingScreen();
 	game.RunGame();
+
+	game.board.unloadTextures(); // Unload textures
+	CloseWindow(); // Close window and OpenGL context
+
 	return 0;
 }
-

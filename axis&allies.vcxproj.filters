@@ -63,5 +63,8 @@
     <Image Include="..\..\..\97258\AppData\Local\Temp\tank.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\97258\AppData\Local\Temp\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
