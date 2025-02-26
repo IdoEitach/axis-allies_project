@@ -86,12 +86,12 @@ void RiskGame::handlePlayingPhase() {
 
 		while (keepAttacking) {
 			board.setPhase(Phase::ChooseTerritoryToAttackFrom);
-			int forcesToAttackWith , forcesToDefenceWith;
+			int forcesToAttackWith, forcesToDefenceWith;
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 			Territory* chosenToAttackFrom = ChoosingTeritorryToAttackFrom(&forcesToAttackWith);
 			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
 			board.setPhase(Phase::ChooseTerritoryToAttack);
-			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom , forcesToDefenceWith);
+			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom, forcesToDefenceWith);
 
 			int valueAttackers[3] = { 0 };
 			int valueDefenders[2] = { 0 };
@@ -186,7 +186,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 	}
 	return nullptr;
 }
-Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom ,int& forcesToDefenceWith) {
+Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom, int& forcesToDefenceWith) {
 	float deltaTime = 0;
 	bool clickedOnTerritory = false;
 	Territory* clickTerritoryPtr = board.checkClick();
@@ -206,8 +206,8 @@ Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 			for (auto& neighbor : board.adjacencyList[chosenTeritorryToAtackFrom->getName()]) {
 				if (neighbor == clickTerritoryPtr->getName()) {
 					forcesToDefenceWith = board.getInput(clickTerritoryPtr);
-					if(forcesToDefenceWith <= clickTerritoryPtr->getForces() )
-					return clickTerritoryPtr;
+					if (forcesToDefenceWith <= clickTerritoryPtr->getForces())
+						return clickTerritoryPtr;
 				}
 			}
 			clickTerritoryPtr = nullptr;
@@ -301,16 +301,9 @@ int main() {
 	float  screen_height = 779.875/*GetScreenWidth()*/;
 	InitWindow(screen_width, screen_height, "Risk Game Map");
 	SetTargetFPS(140);
-
-	//ToggleFullscreen();
-
-
 	RiskGame game;
-
 	game.board.displayLoadingScreen();
-
 	game.RunGame();
-
 	return 0;
 }
 

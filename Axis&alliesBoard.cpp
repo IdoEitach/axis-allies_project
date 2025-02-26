@@ -267,7 +267,7 @@ Territory* RiskBoard::getTerritoryByName(const std::string& territoryName) const
 
 void RiskBoard::displayLoadingScreen() {
 	// Load the tank texture
-	Texture2D tank = LoadTexture("tank.png"); // Ensure the file path is correct
+	Texture2D tank = LoadTexture("pics/tank.png"); // Ensure the file path is correct
 
 	// Check if the texture is loaded correctly
 	if (tank.id == 0) {
@@ -281,7 +281,7 @@ void RiskBoard::displayLoadingScreen() {
 	float tankSpeed = 200.0f; // Pixels per second
 
 	// Define the duration of the loading screen
-	float loadingDuration = 3.0f; // 3 seconds
+	float loadingDuration = 5.0f; // 3 seconds
 	float elapsedTime = 0.0f;
 
 	while (elapsedTime < loadingDuration) {
