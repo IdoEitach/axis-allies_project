@@ -46,7 +46,7 @@ void RiskBoard::drawBoard() {
 	}
 	DrawText(phaseText.c_str(), 200, 20, 20, BLACK);
 
-		DrawText(phaseText.c_str(), 200, 20, 20, BLACK);
+	DrawText(phaseText.c_str(), 200, 20, 20, BLACK);
 	// Draw borders (connections) first for visual layering
 	for (const auto& adjacencyPair : adjacencyList) {
 		const std::string& territoryName = adjacencyPair.first;
@@ -84,8 +84,6 @@ void RiskBoard::unloadTextures() {
 	UnloadTexture(backgroundTexture);
 	UnloadTexture(territoryTexture);
 }
-
-
 /// <summary>
 /// this function draws the initialization phase
 /// </summary>
@@ -145,8 +143,6 @@ int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
 			DrawText("Enter the amount of forces to move :", 200, 40, 20, BLACK);
 			break;
 		}
-
-		
 		DrawRectangle(200, 70, 140, 30, LIGHTGRAY);
 
 		DrawText(inputText, 210, 75, 20, BLACK);
@@ -178,23 +174,71 @@ int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
 	return atoi(inputText);
 }
 
+bool RiskBoard::drawYesNoMessageBox(const std::string& message) {
+	Rectangle messageBox = { 200, 200, 400, 200 };
+	Rectangle yesButton = { 250, 350, 100, 50 };
+	Rectangle noButton = { 450, 350, 100, 50 };
+
+	float fadeDuration = 1.0f; // Duration of the fade effect in seconds
+	float elapsedTime = 0.0f;
+	float alpha = 0.0f; // Initial alpha value
+
+	while (true) {
+		BeginDrawing();
+		
+		// Calculate the alpha value for the fade effect
+		if (elapsedTime < fadeDuration) {
+			alpha = elapsedTime / fadeDuration;
+		}
+		else {
+			alpha = 1.0f;
+		}
+
+		// Draw the message box with the fade effect
+		DrawRectangleRec(messageBox, Fade(LIGHTGRAY, alpha));
+		DrawText(message.c_str(), messageBox.x + 20, messageBox.y + 20, 20, Fade(BLACK, alpha));
+		DrawRectangleRec(yesButton, Fade(GREEN, alpha));
+		DrawText("Yes", yesButton.x + 35, yesButton.y + 10, 20, Fade(BLACK, alpha));
+		DrawRectangleRec(noButton, Fade(RED, alpha));
+		DrawText("No", noButton.x + 35, noButton.y + 10, 20, Fade(BLACK, alpha));
+
+		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+			Vector2 mousePoint = GetMousePosition();
+			if (CheckCollisionPointRec(mousePoint, yesButton)) {
+				EndDrawing();
+				return true;
+			}
+			else if (CheckCollisionPointRec(mousePoint, noButton)) {
+				EndDrawing();
+				return false;
+			}
+		}
+
+		EndDrawing();
+
+		// Update the elapsed time
+		elapsedTime += GetFrameTime();
+	}
+}
+
 void RiskBoard::drawChoosingTerritoryToMoveFrom() {
-	
 	drawBoard();
 	drawForcesInfo(); // Draw forces information
-
-
 }
 /// <summary>
 /// this function draws the attacking phase
 /// </summary>
 void RiskBoard::drawChoosingTerritoryToAttackFrom() {
-	
+
 	drawBoard();
 	drawForcesInfo(); // Draw forces information
-	}
+}
 
+void RiskBoard::drawChoosingTerritoryToAttack() {
+	drawBoard();
+	drawForcesInfo(); // Draw forces information
 
+}
 /// <summary>
 /// this function rolls the dice
 /// and making the dice animation
@@ -304,6 +348,8 @@ Territory* RiskBoard::getTerritoryByName(const std::string& territoryName) const
 	return nullptr;
 }
 
+
+
 void RiskBoard::displayLoadingScreen() {
 	// Load the tank texture
 	Texture2D tank = LoadTexture("pics/tank.png"); // Ensure the file path is correct
@@ -356,3 +402,4 @@ void RiskBoard::displayLoadingScreen() {
 	// Unload the tank texture
 	UnloadTexture(tank);
 }
+

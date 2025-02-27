@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|solutionrelative:Axis\u0026alliesBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\axis\u0026allies.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|solutionrelative:axis\u0026allies.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|solutionrelative:Axis\u0026alliesBoard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|solutionrelative:Axis\u0026alliesBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{122A5721-A438-4C22-A238-7CCFF316B8FA}|axis\u0026allies.vcxproj|C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,13 +38,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Axis\u0026alliesBoard.cpp",
               "DocumentMoniker": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.cpp",
               "RelativeDocumentMoniker": "Axis\u0026alliesBoard.cpp",
               "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.cpp",
               "RelativeToolTip": "Axis\u0026alliesBoard.cpp",
-              "ViewState": "AgIAAKQAAAAAAAAAAAAAAL8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAAAD4AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-25T17:40:31.403Z",
               "EditorCaption": ""
@@ -52,27 +52,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Axis\u0026alliesBoard.h",
-              "DocumentMoniker": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.h",
-              "RelativeDocumentMoniker": "Axis\u0026alliesBoard.h",
-              "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.h",
-              "RelativeToolTip": "Axis\u0026alliesBoard.h",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-01-23T16:58:05.766Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "axis\u0026allies.cpp",
               "DocumentMoniker": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\axis\u0026allies.cpp",
               "RelativeDocumentMoniker": "axis\u0026allies.cpp",
               "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\axis\u0026allies.cpp",
               "RelativeToolTip": "axis\u0026allies.cpp",
-              "ViewState": "AgIAANoAAAAAAAAAAAAAANwAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-12-29T10:47:34.239Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Axis\u0026alliesBoard.h",
+              "DocumentMoniker": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.h",
+              "RelativeDocumentMoniker": "Axis\u0026alliesBoard.h",
+              "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Axis\u0026alliesBoard.h",
+              "RelativeToolTip": "Axis\u0026alliesBoard.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-01-23T16:58:05.766Z",
               "EditorCaption": ""
             },
             {
@@ -85,8 +85,7 @@
               "RelativeToolTip": "Axis\u0026allies.h",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAACQAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-01-23T18:05:17.035Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-23T18:05:17.035Z"
             },
             {
               "$type": "Document",
@@ -98,8 +97,7 @@
               "RelativeToolTip": "Player.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-01-27T16:12:54.64Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-27T16:12:54.64Z"
             }
           ]
         }

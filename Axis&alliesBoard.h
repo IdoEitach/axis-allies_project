@@ -38,8 +38,8 @@ public:
 	void drawChoosingTerritoryToReinforce();
 	int getInput(Territory* clickedTerritoryPtr);
     bool hasAdjacentEnemies(const std::string& territoryName, int currentPlayer) const;
-	void drawChoosingTerritoryToAttackFrom();
     Territory* getTerritoryByName(const std::string& territoryName) const;
+	void drawChoosingTerritoryToAttackFrom();
 	void drawChoosingTerritoryToAttack();
 	void drawChoosingTerritoryToMoveFrom();
 	void drawChoosingTerritoryToMoveTo();
@@ -51,7 +51,7 @@ public:
     void RollCubes();
     // Method to load textures
     void loadTextures();
-
+    bool drawYesNoMessageBox(const std::string& question);
     // Method to unload textures
     void unloadTextures();
 };

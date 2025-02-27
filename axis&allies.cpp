@@ -79,9 +79,7 @@ void RiskGame::handlePlayingPhase() {
 		float deltaTime = 0;
 		hanleReinforcement();
 		std::string input;
-		std::cout << "Do you want to attack? (y/n): ";
-		std::getline(std::cin, input);
-		keepAttacking = (input == "y");
+		keepAttacking = board.drawYesNoMessageBox("Do you want to attack?");
 		std::cout << "keep attacking is: " << keepAttacking << std::endl;
 
 		while (keepAttacking) {
@@ -97,6 +95,8 @@ void RiskGame::handlePlayingPhase() {
 			int valueDefenders[2] = { 0 };
 			board.RollCubes();
 
+			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
+			std::cout << "the forces to defence with are: " << forcesToDefenceWith << std::endl;
 
 			for (int i = 0; i < forcesToAttackWith; i++) {
 				valueAttackers[i] = GetRandomValue(1, 6);
@@ -116,19 +116,13 @@ void RiskGame::handlePlayingPhase() {
 				std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
 			}
 
-			std::string input;
-			std::cout << "Do you want to keep attacking? (y/n): ";
-			std::getline(std::cin, input);
-			keepAttacking = (input == "y");
+			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 	}
-	std::string input;
-	std::cout << "Do you want to move Forces from a territoy? (y/n): ";
-	std::getline(std::cin, input);
-	if (input == "y") {
+	
+	if (board.drawYesNoMessageBox("Do you want to move forces from ur territory ?")) {
 		std::cout << "moving forces" << std::endl;
-		
 		board.setPhase(Phase::MovingForcesFrom);
 		Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
 		std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
@@ -138,16 +132,15 @@ void RiskGame::handlePlayingPhase() {
 }
 Territory* RiskGame::chossingTerritoryToMoveFrom() {
 	float deltaTime = 0;
-	
+
 	Territory* clickTerritoryPtr = board.checkClick();
 
-	while (clickTerritoryPtr == nullptr ) {
+	while (clickTerritoryPtr == nullptr) {
 		deltaTime = GetFrameTime();
 		messageManeger.updateMessages(deltaTime);
 		BeginDrawing();
-
-		messageManeger.drawMessages();
 		board.drawChoosingTerritoryToMoveFrom();
+		messageManeger.drawMessages();
 		clickTerritoryPtr = board.checkClick();
 		if (clickTerritoryPtr != nullptr) {
 			if (clickTerritoryPtr->getOwner() != currentPlayer) {
@@ -159,7 +152,7 @@ Territory* RiskGame::chossingTerritoryToMoveFrom() {
 				messageManeger.addMessage("You can only move from territories with more than one force ", 2.0f);
 			}
 			else {
-				if (!board.hasAdjacentEnemies(clickTerritoryPtr->getName(), currentPlayer^1)) {
+				if (!board.hasAdjacentEnemies(clickTerritoryPtr->getName(), currentPlayer ^ 1)) {
 					clickTerritoryPtr = nullptr;
 					messageManeger.addMessage("You can only move from territories with adjacent ownedTerritories", 2.0f);
 				}
@@ -167,7 +160,7 @@ Territory* RiskGame::chossingTerritoryToMoveFrom() {
 		}
 		EndDrawing();
 	}
-	
+
 	return clickTerritoryPtr;
 }
 /// <summary>
@@ -186,7 +179,6 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 		deltaTime = GetFrameTime();
 		messageManeger.updateMessages(deltaTime);
 		BeginDrawing();
-
 		board.drawChoosingTerritoryToAttackFrom();
 		messageManeger.drawMessages();
 		clickTerritoryPtr = board.checkClick();
@@ -208,7 +200,7 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 		}
 		if (clickTerritoryPtr != nullptr) {
 			while (true) {
-				
+
 				deltaTime = GetFrameTime();
 				messageManeger.updateMessages(deltaTime);
 				BeginDrawing();
@@ -239,14 +231,14 @@ Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 	while (clickTerritoryPtr == nullptr && !clickedOnTerritory) {
 		deltaTime = GetFrameTime();
 		messageManeger.updateMessages(deltaTime);
-		messageManeger.drawMessages();
 		BeginDrawing();
-		ClearBackground(RAYWHITE);
-		board.drawChoosingTerritoryToAttackFrom();
+		board.drawChoosingTerritoryToAttack();
+		messageManeger.drawMessages();
 		clickTerritoryPtr = board.checkClick();
 		if (clickTerritoryPtr != nullptr && clickTerritoryPtr->getOwner() == currentPlayer) {
 			clickTerritoryPtr = nullptr;
 			messageManeger.addMessage("You can only attack enemies territories", 2.0f);
+			std::cout << "You can only attack enemies territories" << std::endl;
 		}
 		else if (clickTerritoryPtr != nullptr && clickTerritoryPtr->getOwner() != currentPlayer) {
 			for (auto& neighbor : board.adjacencyList[chosenTeritorryToAtackFrom->getName()]) {

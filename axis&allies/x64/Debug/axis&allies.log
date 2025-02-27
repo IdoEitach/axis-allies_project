@@ -1,4 +1,15 @@
 ﻿  Axis&alliesBoard.cpp
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(201,61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(201,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(203,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(203,31): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(205,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(205,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  MessageManger.cpp
+  axis&allies.cpp
+C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(340,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(340,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   axis&allies.vcxproj -> C:\Users\ido\פרויקט\axis-allies_project\x64\Debug\axis&allies.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
