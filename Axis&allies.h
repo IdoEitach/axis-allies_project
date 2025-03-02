@@ -9,6 +9,7 @@
 #include "Axis&alliesBoard.h"
 #include "MessageManeger.h"
 #include "Dice.h"
+#include <algorithm>
 
 #define NUMBER_OF_TERRITORRIES 9
 

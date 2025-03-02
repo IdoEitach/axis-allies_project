@@ -64,11 +64,7 @@ void RiskGame::handleInitializationPhase() {
 		}
 	}
 }
-static int compare(const void* a, const void* b) {
-	int int_a = *((int*)a);
-	int int_b = *((int*)b);
-	return (int_b - int_a);
-}
+
 void RiskGame::handlePlayingPhase() {
 	if (currentPlayer == 0) {
 		std::cout << "in player 0 game phase" << std::endl;
@@ -91,36 +87,52 @@ void RiskGame::handlePlayingPhase() {
 			board.setPhase(Phase::ChooseTerritoryToAttack);
 			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom, forcesToDefenceWith);
 
-			int valueAttackers[3] = { 0 };
-			int valueDefenders[2] = { 0 };
+			std::vector <int> valueAttackers;
+			std::vector <int> valueDefenders;
+
 			board.RollCubes();
 
 			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
 			std::cout << "the forces to defence with are: " << forcesToDefenceWith << std::endl;
 
 			for (int i = 0; i < forcesToAttackWith; i++) {
-				valueAttackers[i] = GetRandomValue(1, 6);
+				valueAttackers.push_back(GetRandomValue(1, 6));
 			}
 
-			qsort(valueAttackers, forcesToAttackWith, sizeof(int), compare);
+			std::sort(valueAttackers.begin(), valueAttackers.end(), std::greater<int>());
 			for (int i = 0; i < forcesToAttackWith; i++) {
 				std::cout << "the value of the attacker dice number " << i << " is: " << valueAttackers[i] << std::endl;
 			}
 
 			for (int i = 0; i < forcesToDefenceWith; i++) {
-				valueDefenders[i] = GetRandomValue(1, 6);
+				valueDefenders.push_back(GetRandomValue(1, 6));
 			}
 
-			qsort(valueDefenders, forcesToDefenceWith, sizeof(int), compare);
+			std::sort(valueDefenders.begin(), valueDefenders.end(), std::greater<int>());
 			for (int i = 0; i < forcesToDefenceWith; i++) {
 				std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
+				if (valueAttackers[i] > valueDefenders[i]) {
+					chosenToAttack->AddForces(-1, chosenToAttack->getOwner());
+					currentPlayer == player0.getId() ? player1.addForces(-1) : player0.addForces(-1);
+				}
+				else {
+					chosenToAttackFrom->AddForces(-1, chosenToAttackFrom->getOwner());
+					currentPlayer == player0.getId() ? player0.addForces(-1) : player1.addForces(-1);
+				}
+			}
+			if (chosenToAttack->getForces() == 0) {
+				std::cout << "haha we occuipied ur territory " << std::endl;
+				chosenToAttack->setOwner(currentPlayer);
+				chosenToAttack->AddForces(forcesToAttackWith, currentPlayer);
+				chosenToAttackFrom->AddForces(-forcesToAttackWith, currentPlayer);
+				currentPlayer == player0.getId() ? player0.addTerritory(chosenToAttack->getName()) : player1.addTerritory(chosenToAttack->getName());
 			}
 
 			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 	}
-	
+
 	if (board.drawYesNoMessageBox("Do you want to move forces from ur territory ?")) {
 		std::cout << "moving forces" << std::endl;
 		board.setPhase(Phase::MovingForcesFrom);
@@ -335,7 +347,7 @@ void RiskGame::buildMap() {
 }
 
 int main() {
-	float screen_width = 1088 /*GetScreenHeight() */;
+	float screen_width = 1088 /*GetScreenHeight()*/;
 	float  screen_height = 779.875/*GetScreenWidth()*/;
 	InitWindow(screen_width, screen_height, "Risk Game Map");
 	SetTargetFPS(140);

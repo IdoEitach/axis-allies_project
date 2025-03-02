@@ -47,8 +47,5 @@ void Player::reinForcement(int amount, Territory* territoryPtr) {
 }
 
 int Player::howMuchForcesToAdd() {
-    if (territoryCount < 9) {
-        return 3;
-    }
-    return territoryCount / 3;
+	return std::max(3, territoryCount / 3);
 }
