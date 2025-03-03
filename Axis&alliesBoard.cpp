@@ -55,25 +55,23 @@ void RiskBoard::drawBoard() {
 			DrawLineV(territories.at(territoryName).getPosition(), territories.at(neighbor).getPosition(), BLACK);
 		}
 	}
-
 	// Draw territories (nodes)
 	for (const auto& territoryPair : territories) {
 		const Territory& territory = territoryPair.second;
 		if (territory.getName() == clickedTerritory->getName()) {
 			// Draw selected territory in bold
 			DrawCircleV(territory.getPosition(), 25, territory.getColor()); // Larger circle
-			DrawText(territory.getName().c_str(), static_cast<int>(territory.getPosition().x) - 25, static_cast<int>(territory.getPosition().y) - 15, 25, BLACK); // Larger font
+            DrawText((territory.getName() + " the forces :"+ std::to_string(territory.getForces())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
 		}
 		else {
-			DrawCircleV(territory.getPosition(), 20, territory.getColor());
-			DrawText(territory.getName().c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
+			DrawCircleV(territory.getPosition(), 20, territory.getColor());			
+            DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 15, BLACK);
 		}
 	}
 	if (!clickedTerritory->getName().empty()) {
 		DrawText(clickedTerritory->getName().c_str(), 10, 10, 20, BLACK);
 	}
 }
-
 
 void RiskBoard::loadTextures() {
 	backgroundTexture = LoadTexture("pics/background.png");
@@ -296,7 +294,7 @@ void RiskBoard::drawForcesInfo() {
 			textColor = RED; // Highlight the selected territory
 
 		std::string info = territory.getName() + ": " + std::to_string(territory.getForces()) + " forces , owner : " + std::to_string(territory.getOwner());
-		DrawText(info.c_str(), 650, yOffset, 20, textColor);
+		DrawText(info.c_str(), 820, yOffset, 15, textColor);
 		yOffset += 30; // Increment y offset for the next line
 	}
 }
@@ -347,8 +345,6 @@ Territory* RiskBoard::getTerritoryByName(const std::string& territoryName) const
 	}
 	return nullptr;
 }
-
-
 
 void RiskBoard::displayLoadingScreen() {
 	// Load the tank texture

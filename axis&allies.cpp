@@ -25,7 +25,6 @@ void RiskGame::RunGame() {
 			handleEndGamePhase();
 			break;
 		}
-
 		EndDrawing();
 	}
 }
@@ -64,7 +63,6 @@ void RiskGame::handleInitializationPhase() {
 		}
 	}
 }
-
 void RiskGame::handlePlayingPhase() {
 	if (currentPlayer == 0) {
 		std::cout << "in player 0 game phase" << std::endl;
@@ -107,7 +105,6 @@ void RiskGame::handlePlayingPhase() {
 			for (int i = 0; i < forcesToDefenceWith; i++) {
 				valueDefenders.push_back(GetRandomValue(1, 6));
 			}
-
 			std::sort(valueDefenders.begin(), valueDefenders.end(), std::greater<int>());
 			for (int i = 0; i < forcesToDefenceWith; i++) {
 				std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
@@ -127,7 +124,6 @@ void RiskGame::handlePlayingPhase() {
 				chosenToAttackFrom->AddForces(-forcesToAttackWith, currentPlayer);
 				currentPlayer == player0.getId() ? player0.addTerritory(chosenToAttack->getName()) : player1.addTerritory(chosenToAttack->getName());
 			}
-
 			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
@@ -139,8 +135,8 @@ void RiskGame::handlePlayingPhase() {
 		Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
 		std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
 		board.setPhase(Phase::MovingForcesTo);
-
 	}
+	changePlayerTurn();
 }
 Territory* RiskGame::chossingTerritoryToMoveFrom() {
 	float deltaTime = 0;
@@ -308,7 +304,6 @@ void RiskGame::hanleReinforcement() {
 		EndDrawing();
 	}
 }
-
 void RiskGame::handleEndGamePhase() {
 	board.drawBoard();
 	board.setPhase(Phase::EndGame);
@@ -323,9 +318,9 @@ void RiskGame::buildMap() {
 #pragma region InitMap
 	// Define North America (Yellow)
 	this->board.addTerritory("ALASKA", -1, 0, { 100, 100 }, YELLOW);
-	this->board.addTerritory("NORTH_WEST_TERRITORY", -1, 0, { 200, 120 }, YELLOW);
+	this->board.addTerritory("NORTH_WEST", -1, 0, { 200, 120 }, YELLOW);
 	this->board.addTerritory("GREENLAND", -1, 0, { 500, 80 }, YELLOW);
-	this->board.addTerritory("ONTARIO", -1, 0, { 300, 200 }, YELLOW);
+	this->board.addTerritory("ONTARIO", -1, 0, { 300, 250 }, YELLOW);
 	this->board.addTerritory("QUEBEC", -1, 0, { 400, 200 }, YELLOW);
 
 	// Define South America (Orange)
@@ -335,14 +330,18 @@ void RiskGame::buildMap() {
 	this->board.addTerritory("ARGENTINA", -1, 0, { 350, 600 }, ORANGE);
 
 	// Define borders (example connections)
-	this->board.addBorder("ALASKA", "NORTH_WEST_TERRITORY");
-	this->board.addBorder("NORTH_WEST_TERRITORY", "ONTARIO");
+	this->board.addBorder("ALASKA", "NORTH_WEST");
+	this->board.addBorder("NORTH_WEST", "ONTARIO");
 	this->board.addBorder("ONTARIO", "QUEBEC");
 	this->board.addBorder("ONTARIO", "GREENLAND");
 	this->board.addBorder("QUEBEC", "GREENLAND");
 	this->board.addBorder("VENEZUELA", "BRAZIL");
 	this->board.addBorder("BRAZIL", "PERU");
 	this->board.addBorder("PERU", "ARGENTINA");
+	this->board.addBorder("BRAZIL", "ARGENTINA");
+	this->board.addBorder("VENEZUELA", "ONTARIO");
+	this->board.addBorder("VENEZUELA", "QUEBEC");
+
 #pragma endregion
 }
 
