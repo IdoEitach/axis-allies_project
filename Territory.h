@@ -11,11 +11,14 @@ private:
     int forces;
     Vector2 position;
     Color color;
+	float grade;
 
 public:
     Territory();
     Territory(const std::string& name, int owner, int forces, Vector2 position, Color color);
 
+	float getGrade() const;
+	void setGrade(float newGrade);
     std::string getName() const;
     int getOwner() const;
     int getForces() const;

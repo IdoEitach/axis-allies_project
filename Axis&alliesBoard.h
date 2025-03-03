@@ -19,11 +19,11 @@ enum Phase {
 };
 class RiskBoard {
 private:
-    std::unordered_map<std::string, Territory> territories;
     Territory* clickedTerritory{ new Territory("", 0, 0, {0, 0}, {0, 0, 0, 0}) };
     Texture2D backgroundTexture;
     Texture2D territoryTexture;
 public:
+    std::unordered_map<std::string, Territory> territories;
     std::unordered_map<std::string, std::vector<std::string>> adjacencyList;
 private:
 

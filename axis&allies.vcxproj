@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="axis&amp;allies.cpp" />
     <ClCompile Include="Axis&amp;alliesBoard.cpp" />
+    <ClCompile Include="Bot.cpp" />
     <ClCompile Include="Dice.cpp" />
     <ClCompile Include="MessageManger.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Axis&amp;allies.h" />
     <ClInclude Include="Axis&amp;alliesBoard.h" />
+    <ClInclude Include="Bot.h" />
     <ClInclude Include="Dice.h" />
     <ClInclude Include="MessageManeger.h" />
     <ClInclude Include="Player.h" />

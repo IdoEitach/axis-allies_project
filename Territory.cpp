@@ -6,6 +6,9 @@ Territory::Territory(const std::string& name, int owner, int forces, Vector2 pos
     : name(name), owner(owner), forces(forces), position(position), color(color) {
 } // constructor with parameters
 
+float Territory::getGrade() const { return grade; }
+void Territory::setGrade(float newGrade) { grade = newGrade; }
+
 std::string Territory::getName() const { return name; }
 int Territory::getOwner() const { return owner; }
 int Territory::getForces() const { return this->forces; }

@@ -1,6 +1,7 @@
 ﻿#include "Axis&allies.h"
 
-RiskGame::RiskGame() {
+
+RiskGame::RiskGame()  { 
 	buildMap();
 }
 
@@ -8,6 +9,10 @@ RiskGame::RiskGame() {
 /// runnig the game based on the current phase
 /// </summary>
 void RiskGame::RunGame() {
+
+	currentPlayer = 0;
+	counterOfSelectedTerritories = 0;
+	currentPhase = INITIALIZING;
 	while (!WindowShouldClose()) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
@@ -45,10 +50,12 @@ void RiskGame::handleInitializationPhase() {
 		clickedTerritoryPtr->AddForces(0, currentPlayer);
 
 		if (currentPlayer == 1) {
+
 			player1.addForces(1);
 			player1.addTerritory(clickedTerritoryPtr->getName());
 		}
 		else {
+			/*clickedTerritoryPtr = bot.chosenTerritoryToInit();*/
 			player0.addForces(1);
 			player0.addTerritory(clickedTerritoryPtr->getName());
 		}
