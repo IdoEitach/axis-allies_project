@@ -19,7 +19,7 @@ enum Phase {
 };
 class RiskBoard {
 private:
-    Territory* clickedTerritory{ new Territory("", 0, 0, {0, 0}, {0, 0, 0, 0}) };
+    Territory* clickedTerritory{ new Territory("", "", 0, 0, {0, 0}, {0, 0, 0, 0})};
     Texture2D backgroundTexture;
     Texture2D territoryTexture;
 public:
@@ -30,7 +30,7 @@ private:
 	Phase currentPhase = InitializingTerritories;
 
 public:
-    void addTerritory(const std::string& territoryName, int owner, int forces, Vector2 position, Color color);
+    void addTerritory(const std::string& territoryName ,const std::string& continent,int owner, int forces, Vector2 position, Color color);
     void addBorder(const std::string& territoryName1, const std::string& territoryName2);
     void displayLoadingScreen();
 
@@ -54,4 +54,6 @@ public:
     bool drawYesNoMessageBox(const std::string& question);
     // Method to unload textures
     void unloadTextures();
+
+    std::vector<Territory*> getTerritoriesInContinent(const std::string& continent) const;
 };

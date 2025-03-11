@@ -1,7 +1,7 @@
 ﻿#include "Axis&alliesBoard.h"
 
-void RiskBoard::addTerritory(const std::string& territoryName, int owner, int forces, Vector2 position, Color color) {
-	Territory territory(territoryName, owner, forces, position, color);
+void RiskBoard::addTerritory(const std::string& territoryName,const std::string& continent, int owner, int forces, Vector2 position, Color color) {
+	Territory territory(territoryName, continent,  owner, forces, position, color);
 	territories[territoryName] = territory;
 	adjacencyList[territoryName] = {};
 }
@@ -61,11 +61,11 @@ void RiskBoard::drawBoard() {
 		if (territory.getName() == clickedTerritory->getName()) {
 			// Draw selected territory in bold
 			DrawCircleV(territory.getPosition(), 25, territory.getColor()); // Larger circle
-            DrawText((territory.getName() + " the forces :"+ std::to_string(territory.getForces())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
+            DrawText((territory.getName() + " the forces :"+ std::to_string(territory.getForces()) + "\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
 		}
 		else {
 			DrawCircleV(territory.getPosition(), 20, territory.getColor());			
-            DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 15, BLACK);
+            DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces())+"\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 15, BLACK);
 		}
 	}
 	if (!clickedTerritory->getName().empty()) {
@@ -313,6 +313,7 @@ Territory* RiskBoard::checkClick() {
 				clickedTerritory = &territory;
 				// printig log to the console
 				std::cout << "the territory is: " << clickedTerritory->getName().c_str() << std::endl;
+				std::cout << "the continent is: " << clickedTerritory->getContinent().c_str() << std::endl;
 				for (const auto& neighbor : adjacencyList[clickedTerritory->getName()])
 					std::cout << "the neighbor is: " << neighbor << std::endl;
 				// end of printing log to the console
@@ -399,3 +400,12 @@ void RiskBoard::displayLoadingScreen() {
 	UnloadTexture(tank);
 }
 
+std::vector<Territory*> RiskBoard::getTerritoriesInContinent(const std::string& continent) const {
+	std::vector<Territory*> territoriesInContinent;
+	for (const auto& pair : territories) {
+		if (pair.second.getContinent() == continent) {
+			territoriesInContinent.push_back(const_cast<Territory*>(&pair.second));
+		}
+	}
+	return territoriesInContinent;
+}

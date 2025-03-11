@@ -3,6 +3,9 @@
 #include <string>
 #include <iostream>
 #include "Territory.h"
+#include "Axis&AlliesBoard.h"
+
+
 
 class Player {
 private:
@@ -27,7 +30,8 @@ public:
     int getAmountOfForcesToAdd();
     void setAmountOfForcesToAdd();
     void reinForcement(int amount, Territory* terrotiryPtr);
-
+    int territoriesNeededForContinent(const RiskBoard& board, const std::string& continent) const; // Add this method
 private:
+
     int howMuchForcesToAdd();
 };

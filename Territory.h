@@ -8,14 +8,16 @@ class Territory {
 private:
     std::string name;
     int owner; // 0 for PC, 1 for player
+	std::string continent;
     int forces;
+	int forcesToget;
     Vector2 position;
     Color color;
-	float grade;
+	double grade;
 
 public:
     Territory();
-    Territory(const std::string& name, int owner, int forces, Vector2 position, Color color);
+    Territory(const std::string& name,const std::string& continent, int owner, int forces, Vector2 position, Color color);
 
 	float getGrade() const;
 	void setGrade(float newGrade);
@@ -24,6 +26,8 @@ public:
     int getForces() const;
     Vector2 getPosition() const;
     Color getColor() const;
+
+	std::string getContinent() const;
 
     void setOwner(int newOwner);
     void setForces(int newForces);

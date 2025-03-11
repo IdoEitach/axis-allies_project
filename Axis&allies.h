@@ -10,26 +10,29 @@
 #include "MessageManeger.h"
 #include "Dice.h"
 #include <algorithm>
-#include "Bot.h" // Include Bot.h
+#include "Bot.h" 
+
+class Bot;
 
 #define NUMBER_OF_TERRITORRIES 9
 
 class RiskGame {
 public:
     RiskBoard board;
-	
+
 private:
     Player player1{ 1 };
     Player player0{ 0 };
     int currentPlayer;
     int counterOfSelectedTerritories;
     MessageManeger messageManeger{};
-   
+    Bot* bot; // Bot pointer declaration
     enum GamePhase { INITIALIZING, PLAYING, END_GAME };
     GamePhase currentPhase;
 
 public:
     RiskGame();
+    ~RiskGame();
     void RunGame();
     void handleInitializationPhase();
     void handlePlayingPhase();
@@ -40,6 +43,8 @@ public:
     void hanleReinforcement();
     void handleEndGamePhase();
     void changePlayerTurn();
-
     void buildMap();
+
+
+	
 };

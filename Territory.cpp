@@ -2,14 +2,16 @@
 
 Territory::Territory() : name(""), owner(0), forces(0), position({ 0, 0 }), color(BLANK) {} // Default constructor
 
-Territory::Territory(const std::string& name, int owner, int forces, Vector2 position, Color color)
-    : name(name), owner(owner), forces(forces), position(position), color(color) {
+
+Territory::Territory(const std::string& name,const std::string& continent, int owner, int forces, Vector2 position, Color color)
+    : name(name), continent(continent), owner(owner), forces(forces), forcesToget(0), position(position), color(color), grade(0.0) {
 } // constructor with parameters
 
 float Territory::getGrade() const { return grade; }
 void Territory::setGrade(float newGrade) { grade = newGrade; }
 
 std::string Territory::getName() const { return name; }
+std::string Territory::getContinent() const { return continent; }
 int Territory::getOwner() const { return owner; }
 int Territory::getForces() const { return this->forces; }
 Vector2 Territory::getPosition() const { return position; }

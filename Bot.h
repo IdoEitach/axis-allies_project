@@ -7,11 +7,10 @@
 class Bot {
 
 public:
-    Bot(RiskBoard& board);
-    Bot(const Bot& other) = delete; // Delete copy constructor
-    Bot& operator=(const Bot& other) = delete; // Delete copy assignment operator
+    Bot(RiskBoard* board);
+    
 private:
-    RiskBoard& board;
+    RiskBoard* board;
 
 public:
     Territory* chosenTerritoryToInit();

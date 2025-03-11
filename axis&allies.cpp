@@ -1,9 +1,18 @@
 ﻿#include "Axis&allies.h"
 
 
-RiskGame::RiskGame()  { 
+// Update the constructor to initialize the bot
+RiskGame::RiskGame() : board(), bot(new Bot(&board)) { // Initialize bot with pointer to board
+	// Other initializations
 	buildMap();
 }
+
+RiskGame::~RiskGame() {
+	delete bot; // Clean up bot
+}
+
+// Add a destructor to clean up the bot
+
 
 /// <summary>
 /// runnig the game based on the current phase
@@ -19,6 +28,7 @@ void RiskGame::RunGame() {
 
 		switch (currentPhase) {
 		case INITIALIZING:
+			std::cout << currentPlayer << std::endl;
 			handleInitializationPhase();
 			break;
 
@@ -41,33 +51,55 @@ void RiskGame::handleInitializationPhase() {
 	if (counterOfSelectedTerritories == NUMBER_OF_TERRITORRIES) {
 		board.setPhase(Phase::ReinforcingChooseTerritory);
 		currentPhase = PLAYING;
+		EndDrawing();
 		return;
 	}
 	// Handle clicks to assign forces
-	Territory* clickedTerritoryPtr = board.checkClick();
-	while (clickedTerritoryPtr != nullptr && clickedTerritoryPtr->getOwner() == -1) {
-
-		clickedTerritoryPtr->AddForces(0, currentPlayer);
-
-		if (currentPlayer == 1) {
-
-			player1.addForces(1);
-			player1.addTerritory(clickedTerritoryPtr->getName());
-		}
-		else {
-			/*clickedTerritoryPtr = bot.chosenTerritoryToInit();*/
-			player0.addForces(1);
-			player0.addTerritory(clickedTerritoryPtr->getName());
-		}
+	Territory* clickedTerritoryPtr = nullptr;
+	if (currentPlayer == 0)
+	{
+		clickedTerritoryPtr = bot->chosenTerritoryToInit();
+		player0.addForces(1);
+		player0.addTerritory(clickedTerritoryPtr->getName());
+		clickedTerritoryPtr->setOwner(0);
+		clickedTerritoryPtr->AddForces(1, 0);
 		changePlayerTurn();
+		std::cout << "in pc init phase" << std::endl;
 		counterOfSelectedTerritories++;
-
-		if (counterOfSelectedTerritories == NUMBER_OF_TERRITORRIES) {
-			std::cout << "  " << std::endl;
-			board.setPhase(Phase::ReinforcingChooseTerritory);
-			currentPhase = PLAYING;
-			return;
+		return;
+	}
+	while (clickedTerritoryPtr == nullptr) {
+		board.drawBoard();
+		board.drawInitPhase();
+		float deltaTime = GetFrameTime();
+		messageManeger.updateMessages(deltaTime);
+		BeginDrawing();
+		board.drawInitPhase();
+		messageManeger.drawMessages();
+		clickedTerritoryPtr = board.checkClick();
+		if (clickedTerritoryPtr != nullptr) {
+			if (clickedTerritoryPtr->getOwner() == -1) {
+				clickedTerritoryPtr->setOwner(currentPlayer);
+				clickedTerritoryPtr->AddForces(1, currentPlayer);
+				if (currentPlayer == 1) {
+					player1.addForces(1);
+				}
+			}
+			else {
+				clickedTerritoryPtr = nullptr;
+				messageManeger.addMessage("You can only select unowned territories", 2.0f);
+			}
 		}
+		EndDrawing();
+	}
+	changePlayerTurn();
+	counterOfSelectedTerritories++;
+
+	if (counterOfSelectedTerritories == NUMBER_OF_TERRITORRIES) {
+		std::cout << "  " << std::endl;
+		board.setPhase(Phase::ReinforcingChooseTerritory);
+		currentPhase = PLAYING;
+		return;
 	}
 }
 void RiskGame::handlePlayingPhase() {
@@ -324,17 +356,17 @@ void RiskGame::changePlayerTurn() {
 void RiskGame::buildMap() {
 #pragma region InitMap
 	// Define North America (Yellow)
-	this->board.addTerritory("ALASKA", -1, 0, { 100, 100 }, YELLOW);
-	this->board.addTerritory("NORTH_WEST", -1, 0, { 200, 120 }, YELLOW);
-	this->board.addTerritory("GREENLAND", -1, 0, { 500, 80 }, YELLOW);
-	this->board.addTerritory("ONTARIO", -1, 0, { 300, 250 }, YELLOW);
-	this->board.addTerritory("QUEBEC", -1, 0, { 400, 200 }, YELLOW);
+	this->board.addTerritory("ALASKA","NORTAMERICA", -1, 0, {100, 100}, YELLOW);
+	this->board.addTerritory("NORTH_WEST", "NORTAMERICA", -1, 0, { 200, 120 }, YELLOW);
+	this->board.addTerritory("GREENLAND", "NORTAMERICA", -1, 0, { 500, 80 }, YELLOW);
+	this->board.addTerritory("ONTARIO", "NORTAMERICA",-1, 0, { 300, 250 }, YELLOW);
+	this->board.addTerritory("QUEBEC", "NORTAMERICA", -1, 0, { 400, 200 }, YELLOW);
 
 	// Define South America (Orange)
-	this->board.addTerritory("VENEZUELA", -1, 0, { 300, 400 }, ORANGE);
-	this->board.addTerritory("BRAZIL", -1, 0, { 350, 500 }, ORANGE);
-	this->board.addTerritory("PERU", -1, 0, { 300, 550 }, ORANGE);
-	this->board.addTerritory("ARGENTINA", -1, 0, { 350, 600 }, ORANGE);
+	this->board.addTerritory("VENEZUELA" , "SOUTHAMERICA", -1, 0, {300, 400}, ORANGE);
+	this->board.addTerritory("BRAZIL","SOUTHAMERICA" ,-1, 0, { 350, 500 }, ORANGE);
+	this->board.addTerritory("PERU", "SOUTHAMERICA",-1, 0, { 300, 550 }, ORANGE);
+	this->board.addTerritory("ARGENTINA", "SOUTHAMERICA",-1, 0, { 350, 600 }, ORANGE);
 
 	// Define borders (example connections)
 	this->board.addBorder("ALASKA", "NORTH_WEST");
