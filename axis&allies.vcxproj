@@ -136,6 +136,7 @@
     <ClCompile Include="Dice.cpp" />
     <ClCompile Include="MessageManger.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="Territory.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="Dice.h" />
     <ClInclude Include="MessageManeger.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Territory.h" />
   </ItemGroup>
   <ItemGroup>

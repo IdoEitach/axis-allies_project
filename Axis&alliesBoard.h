@@ -23,7 +23,7 @@ private:
     Texture2D backgroundTexture;
     Texture2D territoryTexture;
 public:
-    std::unordered_map<std::string, Territory> territories;
+    std::unordered_map<std::string, Territory> territories; 
     std::unordered_map<std::string, std::vector<std::string>> adjacencyList;
 private:
 

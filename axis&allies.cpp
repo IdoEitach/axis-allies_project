@@ -59,6 +59,8 @@ void RiskGame::handleInitializationPhase() {
 	if (currentPlayer == 0)
 	{
 		clickedTerritoryPtr = bot->chosenTerritoryToInit();
+		if (clickedTerritoryPtr != nullptr) {
+
 		player0.addForces(1);
 		player0.addTerritory(clickedTerritoryPtr->getName());
 		clickedTerritoryPtr->setOwner(0);
@@ -66,6 +68,7 @@ void RiskGame::handleInitializationPhase() {
 		changePlayerTurn();
 		std::cout << "in pc init phase" << std::endl;
 		counterOfSelectedTerritories++;
+		}
 		return;
 	}
 	while (clickedTerritoryPtr == nullptr) {
@@ -383,7 +386,6 @@ void RiskGame::buildMap() {
 
 #pragma endregion
 }
-
 int main() {
 	float screen_width = 1088 /*GetScreenHeight()*/;
 	float  screen_height = 779.875/*GetScreenWidth()*/;

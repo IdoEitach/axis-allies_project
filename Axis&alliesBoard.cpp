@@ -1,7 +1,7 @@
 ﻿#include "Axis&alliesBoard.h"
 
-void RiskBoard::addTerritory(const std::string& territoryName,const std::string& continent, int owner, int forces, Vector2 position, Color color) {
-	Territory territory(territoryName, continent,  owner, forces, position, color);
+void RiskBoard::addTerritory(const std::string& territoryName, const std::string& continent, int owner, int forces, Vector2 position, Color color) {
+	Territory territory(territoryName, continent, owner, forces, position, color);
 	territories[territoryName] = territory;
 	adjacencyList[territoryName] = {};
 }
@@ -61,11 +61,11 @@ void RiskBoard::drawBoard() {
 		if (territory.getName() == clickedTerritory->getName()) {
 			// Draw selected territory in bold
 			DrawCircleV(territory.getPosition(), 25, territory.getColor()); // Larger circle
-            DrawText((territory.getName() + " the forces :"+ std::to_string(territory.getForces()) + "\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
+			DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces()) + "\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 20, BLACK);
 		}
 		else {
-			DrawCircleV(territory.getPosition(), 20, territory.getColor());			
-            DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces())+"\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 15, BLACK);
+			DrawCircleV(territory.getPosition(), 20, territory.getColor());
+			DrawText((territory.getName() + " the forces :" + std::to_string(territory.getForces()) + "\n the owner : " + std::to_string(territory.getOwner())).c_str(), static_cast<int>(territory.getPosition().x) - 20, static_cast<int>(territory.getPosition().y) - 10, 15, BLACK);
 		}
 	}
 	if (!clickedTerritory->getName().empty()) {
@@ -183,7 +183,7 @@ bool RiskBoard::drawYesNoMessageBox(const std::string& message) {
 
 	while (true) {
 		BeginDrawing();
-		
+
 		// Calculate the alpha value for the fade effect
 		if (elapsedTime < fadeDuration) {
 			alpha = elapsedTime / fadeDuration;
