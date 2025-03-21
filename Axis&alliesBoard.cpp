@@ -72,7 +72,6 @@ void RiskBoard::drawBoard() {
 		DrawText(clickedTerritory->getName().c_str(), 10, 10, 20, BLACK);
 	}
 }
-
 void RiskBoard::loadTextures() {
 	backgroundTexture = LoadTexture("pics/background.png");
 	territoryTexture = LoadTexture("pics/territory.png");
