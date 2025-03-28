@@ -30,7 +30,7 @@ public:
     int getAmountOfForcesToAdd();
     void setAmountOfForcesToAdd();
     void reinForcement(int amount, Territory* terrotiryPtr);
-    int territoriesNeededForContinent(const RiskBoard& board, const std::string& continent) const; // Add this method
+    int territoriesNeededForContinent(const AxisBoard& board, const std::string& continent) const; // Add this method
 private:
 
     int howMuchForcesToAdd();

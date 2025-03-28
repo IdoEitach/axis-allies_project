@@ -2,22 +2,20 @@
 
 
 // Update the constructor to initialize the bot
-RiskGame::RiskGame() : board(), bot(new Bot(&board)) { // Initialize bot with pointer to board
+AxisGame::AxisGame() : board(), bot(new Bot(&board)) { // Initialize bot with pointer to board
 	// Other initializations
 	buildMap();
 }
 
-RiskGame::~RiskGame() {
+AxisGame::~AxisGame() {
 	delete bot; // Clean up bot
 }
-
-// Add a destructor to clean up the bot
 
 
 /// <summary>
 /// runnig the game based on the current phase
 /// </summary>
-void RiskGame::RunGame() {
+void AxisGame::RunGame() {
 
 	currentPlayer = 0;
 	counterOfSelectedTerritories = 0;
@@ -43,7 +41,11 @@ void RiskGame::RunGame() {
 		EndDrawing();
 	}
 }
-void RiskGame::handleInitializationPhase() {
+
+/// <summary>
+/// This function is handling the initialization phase
+/// </summary>
+void AxisGame::handleInitializationPhase() {
 
 	board.drawBoard();
 	board.drawInitPhase();
@@ -61,13 +63,13 @@ void RiskGame::handleInitializationPhase() {
 		clickedTerritoryPtr = bot->chosenTerritoryToInit();
 		if (clickedTerritoryPtr != nullptr) {
 
-		player0.addForces(1);
-		player0.addTerritory(clickedTerritoryPtr->getName());
-		clickedTerritoryPtr->setOwner(0);
-		clickedTerritoryPtr->AddForces(1, 0);
-		changePlayerTurn();
-		std::cout << "in pc init phase" << std::endl;
-		counterOfSelectedTerritories++;
+			player0.addForces(1);
+			player0.addTerritory(clickedTerritoryPtr->getName());
+			clickedTerritoryPtr->setOwner(0);
+			clickedTerritoryPtr->AddForces(1, 0);
+			changePlayerTurn();
+			std::cout << "in pc init phase" << std::endl;
+			counterOfSelectedTerritories++;
 		}
 		return;
 	}
@@ -101,11 +103,17 @@ void RiskGame::handleInitializationPhase() {
 	if (counterOfSelectedTerritories == NUMBER_OF_TERRITORRIES) {
 		std::cout << "  " << std::endl;
 		board.setPhase(Phase::ReinforcingChooseTerritory);
+		currentPlayer = 0; // The Pc is the first player
 		currentPhase = PLAYING;
 		return;
 	}
 }
-void RiskGame::handlePlayingPhase() {
+
+
+/// <summary>
+/// This function is handling the playing phase
+/// </summary>
+void AxisGame::handlePlayingPhase() {
 	if (currentPlayer == 0) {
 		std::cout << "in player 0 game phase" << std::endl;
 		player0.setAmountOfForcesToAdd();
@@ -180,7 +188,7 @@ void RiskGame::handlePlayingPhase() {
 	}
 	changePlayerTurn();
 }
-Territory* RiskGame::chossingTerritoryToMoveFrom() {
+Territory* AxisGame::chossingTerritoryToMoveFrom() {
 	float deltaTime = 0;
 
 	Territory* clickTerritoryPtr = board.checkClick();
@@ -213,12 +221,14 @@ Territory* RiskGame::chossingTerritoryToMoveFrom() {
 
 	return clickTerritoryPtr;
 }
+
+
 /// <summary>
 /// this function is to choose the territory to attack from and it choosing how many forces to attack with
 /// </summary>
 /// <param name="chosenTeritorryToAtackFrom"></param>
 /// <returns></returns>
-Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
+Territory* AxisGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 	float deltaTime = 0;
 	bool clickedOnTerritory = false;
 
@@ -274,7 +284,14 @@ Territory* RiskGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 	}
 	return nullptr;
 }
-Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom, int& forcesToDefenceWith) {
+
+/// <summary>
+/// This function is to choose Territory to attack
+/// </summary>
+/// <param name="chosenTeritorryToAtackFrom"></param>
+/// <param name="forcesToDefenceWith"></param>
+/// <returns></returns>
+Territory* AxisGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom, int& forcesToDefenceWith) {
 	float deltaTime = 0;
 	bool clickedOnTerritory = false;
 	Territory* clickTerritoryPtr = board.checkClick();
@@ -306,7 +323,11 @@ Territory* RiskGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 
 	return clickTerritoryPtr;
 }
-void RiskGame::hanleReinforcement() {
+
+/// <summary>
+/// This function is handling the reinforcement phase
+/// </summary>
+void AxisGame::hanleReinforcement() {
 	float deltaTime = 0;
 	std::cout << "in player 1 game phase" << std::endl;
 	player1.setAmountOfForcesToAdd();
@@ -346,30 +367,42 @@ void RiskGame::hanleReinforcement() {
 		EndDrawing();
 	}
 }
-void RiskGame::handleEndGamePhase() {
+
+
+/// <summary>
+/// this function is handling the end game phase
+/// </summary>
+void AxisGame::handleEndGamePhase() {
 	board.drawBoard();
 	board.setPhase(Phase::EndGame);
 }
+
+
 /// <summary>
 ///  change the player turn
 /// </summary>
-void RiskGame::changePlayerTurn() {
+void AxisGame::changePlayerTurn() {
 	currentPlayer = currentPlayer ^ 1;
 }
-void RiskGame::buildMap() {
+
+/// <summary>
+/// This function is to build the map
+/// the map is built by adding territories and borders
+/// </summary>
+void AxisGame::buildMap() {
 #pragma region InitMap
 	// Define North America (Yellow)
-	this->board.addTerritory("ALASKA","NORTAMERICA", -1, 0, {100, 100}, YELLOW);
+	this->board.addTerritory("ALASKA", "NORTAMERICA", -1, 0, { 100, 100 }, YELLOW);
 	this->board.addTerritory("NORTH_WEST", "NORTAMERICA", -1, 0, { 200, 120 }, YELLOW);
 	this->board.addTerritory("GREENLAND", "NORTAMERICA", -1, 0, { 500, 80 }, YELLOW);
-	this->board.addTerritory("ONTARIO", "NORTAMERICA",-1, 0, { 300, 250 }, YELLOW);
+	this->board.addTerritory("ONTARIO", "NORTAMERICA", -1, 0, { 300, 250 }, YELLOW);
 	this->board.addTerritory("QUEBEC", "NORTAMERICA", -1, 0, { 400, 200 }, YELLOW);
 
 	// Define South America (Orange)
-	this->board.addTerritory("VENEZUELA" , "SOUTHAMERICA", -1, 0, {300, 400}, ORANGE);
-	this->board.addTerritory("BRAZIL","SOUTHAMERICA" ,-1, 0, { 350, 500 }, ORANGE);
-	this->board.addTerritory("PERU", "SOUTHAMERICA",-1, 0, { 300, 550 }, ORANGE);
-	this->board.addTerritory("ARGENTINA", "SOUTHAMERICA",-1, 0, { 350, 600 }, ORANGE);
+	this->board.addTerritory("VENEZUELA", "SOUTHAMERICA", -1, 0, { 300, 400 }, ORANGE);
+	this->board.addTerritory("BRAZIL", "SOUTHAMERICA", -1, 0, { 350, 500 }, ORANGE);
+	this->board.addTerritory("PERU", "SOUTHAMERICA", -1, 0, { 300, 550 }, ORANGE);
+	this->board.addTerritory("ARGENTINA", "SOUTHAMERICA", -1, 0, { 350, 600 }, ORANGE);
 
 	// Define borders (example connections)
 	this->board.addBorder("ALASKA", "NORTH_WEST");
@@ -386,13 +419,15 @@ void RiskGame::buildMap() {
 
 #pragma endregion
 }
+
+
 int main() {
 	float screen_width = 1088 /*GetScreenHeight()*/;
 	float  screen_height = 779.875/*GetScreenWidth()*/;
 	InitWindow(screen_width, screen_height, "Risk Game Map");
 	SetTargetFPS(140);
 
-	RiskGame game;
+	AxisGame game;
 	game.board.loadTextures(); // Load textures
 
 	game.board.displayLoadingScreen();

@@ -6,13 +6,13 @@
 
 class Dice3D {
 private:
-    Vector3 position;      // Dice position
-    Vector3 rotationAxis;  // Rotation axis
-    float rotationAngle;   // Rotation angle
-    bool rolling;          // Is rolling?
-    float rollDuration;    // Rolling time
-    float timer;           // Timer for animation
-    int finalValue;        // Final dice value
+    Vector3 position;      
+    Vector3 rotationAxis;  
+    float rotationAngle;   
+    bool rolling;          
+    float rollDuration;    
+    float timer;           
+    int finalValue;        
 
 public:
     Dice3D(Vector3 pos);

@@ -1,15 +1,15 @@
 ﻿#include "Axis&alliesBoard.h"
 
-void RiskBoard::addTerritory(const std::string& territoryName, const std::string& continent, int owner, int forces, Vector2 position, Color color) {
+void AxisBoard::addTerritory(const std::string& territoryName, const std::string& continent, int owner, int forces, Vector2 position, Color color) {
 	Territory territory(territoryName, continent, owner, forces, position, color);
 	territories[territoryName] = territory;
 	adjacencyList[territoryName] = {};
 }
-void RiskBoard::addBorder(const std::string& territoryName1, const std::string& territoryName2) {
+void AxisBoard::addBorder(const std::string& territoryName1, const std::string& territoryName2) {
 	adjacencyList[territoryName1].push_back(territoryName2);
 	adjacencyList[territoryName2].push_back(territoryName1);
 }
-void RiskBoard::drawBoard() {
+void AxisBoard::drawBoard() {
 	// Draw background texture scaled to fit the window
 	DrawTexturePro(backgroundTexture,
 		{ 0, 0, static_cast<float>(backgroundTexture.width), static_cast<float>(backgroundTexture.height) },
@@ -72,19 +72,19 @@ void RiskBoard::drawBoard() {
 		DrawText(clickedTerritory->getName().c_str(), 10, 10, 20, BLACK);
 	}
 }
-void RiskBoard::loadTextures() {
+void AxisBoard::loadTextures() {
 	backgroundTexture = LoadTexture("pics/background.png");
 	territoryTexture = LoadTexture("pics/territory.png");
 }
 
-void RiskBoard::unloadTextures() {
+void AxisBoard::unloadTextures() {
 	UnloadTexture(backgroundTexture);
 	UnloadTexture(territoryTexture);
 }
 /// <summary>
 /// this function draws the initialization phase
 /// </summary>
-void RiskBoard::drawInitPhase() {
+void AxisBoard::drawInitPhase() {
 	drawForcesInfo(); // Draw forces information
 	// Draw instructions for the initialization phase
 	//DrawText("Initialization Phase: Place your forces on the territories", 200, 20, 20, BLACK);
@@ -92,7 +92,7 @@ void RiskBoard::drawInitPhase() {
 /// <summary>
 /// this function draws the reinforcement phase
 /// </summary>
-void RiskBoard::drawChoosingTerritoryToReinforce() {
+void AxisBoard::drawChoosingTerritoryToReinforce() {
 	drawForcesInfo(); // Draw forces information
 
 	// Draw instructions for the reinforcement phase
@@ -106,7 +106,7 @@ void RiskBoard::drawChoosingTerritoryToReinforce() {
 /// </summary>
 /// <param name="clickedTerritoryPtr"></param>
 /// <returns></returns>
-int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
+int AxisBoard::getInput(Territory* clickedTerritoryPtr) {
 	drawForcesInfo(); // Draw forces information
 	// Draw instructions for the reinforcement phase
 	//DrawText("Reinforcement Phase: Add forces to the selected territory", 200, 20, 20, BLACK);
@@ -171,7 +171,7 @@ int RiskBoard::getInput(Territory* clickedTerritoryPtr) {
 	return atoi(inputText);
 }
 
-bool RiskBoard::drawYesNoMessageBox(const std::string& message) {
+bool AxisBoard::drawYesNoMessageBox(const std::string& message) {
 	Rectangle messageBox = { 200, 200, 400, 200 };
 	Rectangle yesButton = { 250, 350, 100, 50 };
 	Rectangle noButton = { 450, 350, 100, 50 };
@@ -218,20 +218,20 @@ bool RiskBoard::drawYesNoMessageBox(const std::string& message) {
 	}
 }
 
-void RiskBoard::drawChoosingTerritoryToMoveFrom() {
+void AxisBoard::drawChoosingTerritoryToMoveFrom() {
 	drawBoard();
 	drawForcesInfo(); // Draw forces information
 }
 /// <summary>
 /// this function draws the attacking phase
 /// </summary>
-void RiskBoard::drawChoosingTerritoryToAttackFrom() {
+void AxisBoard::drawChoosingTerritoryToAttackFrom() {
 
 	drawBoard();
 	drawForcesInfo(); // Draw forces information
 }
 
-void RiskBoard::drawChoosingTerritoryToAttack() {
+void AxisBoard::drawChoosingTerritoryToAttack() {
 	drawBoard();
 	drawForcesInfo(); // Draw forces information
 
@@ -242,7 +242,7 @@ void RiskBoard::drawChoosingTerritoryToAttack() {
 /// </summary>
 /// <param name="value1"></param>
 /// <param name="value2"></param>
-void RiskBoard::RollCubes() {
+void AxisBoard::RollCubes() {
 
 	Camera camera = { 0 };
 	camera.position = { 6.0f, 6.0f, 6.0f };
@@ -274,16 +274,16 @@ void RiskBoard::RollCubes() {
 		EndDrawing();
 	}
 }
-void RiskBoard::setPhase(Phase newPhase) {
+void AxisBoard::setPhase(Phase newPhase) {
 	currentPhase = newPhase;
 }
-Phase RiskBoard::getPhase() const {
+Phase AxisBoard::getPhase() const {
 	return currentPhase;
 }
 /// <summary>
 /// this function draws the forces information on the screen
 /// </summary>
-void RiskBoard::drawForcesInfo() {
+void AxisBoard::drawForcesInfo() {
 	int yOffset = 40; // Initial y offset for drawing text
 	Color textColor = BLACK;
 	for (const auto& territoryPair : territories) {
@@ -301,7 +301,7 @@ void RiskBoard::drawForcesInfo() {
 /// this function checks if the user clicked on a territory
 /// </summary>
 /// <returns></returns>
-Territory* RiskBoard::checkClick() {
+Territory* AxisBoard::checkClick() {
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 		Vector2 mousePosition = GetMousePosition();
 		std::cout << "\n " << std::endl;
@@ -323,7 +323,7 @@ Territory* RiskBoard::checkClick() {
 	return nullptr;
 }
 
-bool RiskBoard::hasAdjacentEnemies(const std::string& territoryName, int currentPlayer) const {
+bool AxisBoard::hasAdjacentEnemies(const std::string& territoryName, int currentPlayer) const {
 	auto it = adjacencyList.find(territoryName);
 	if (it != adjacencyList.end()) {
 		const std::vector<std::string>& neighbors = it->second;
@@ -338,7 +338,7 @@ bool RiskBoard::hasAdjacentEnemies(const std::string& territoryName, int current
 	return false;
 }
 
-Territory* RiskBoard::getTerritoryByName(const std::string& territoryName) const {
+Territory* AxisBoard::getTerritoryByName(const std::string& territoryName) const {
 	auto it = territories.find(territoryName);
 	if (it != territories.end()) {
 		return const_cast<Territory*>(&(it->second));
@@ -346,7 +346,7 @@ Territory* RiskBoard::getTerritoryByName(const std::string& territoryName) const
 	return nullptr;
 }
 
-void RiskBoard::displayLoadingScreen() {
+void AxisBoard::displayLoadingScreen() {
 	// Load the tank texture
 	Texture2D tank = LoadTexture("pics/tank.png"); // Ensure the file path is correct
 
@@ -399,7 +399,7 @@ void RiskBoard::displayLoadingScreen() {
 	UnloadTexture(tank);
 }
 
-std::vector<Territory*> RiskBoard::getTerritoriesInContinent(const std::string& continent) const {
+std::vector<Territory*> AxisBoard::getTerritoriesInContinent(const std::string& continent) const {
 	std::vector<Territory*> territoriesInContinent;
 	for (const auto& pair : territories) {
 		if (pair.second.getContinent() == continent) {

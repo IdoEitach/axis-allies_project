@@ -17,7 +17,7 @@ enum Phase {
 	MovingForcesTo,
     EndGame
 };
-class RiskBoard {
+class AxisBoard {
 private:
     Territory* clickedTerritory{ new Territory("", "", 0, 0, {0, 0}, {0, 0, 0, 0})};
     Texture2D backgroundTexture;
@@ -26,14 +26,12 @@ public:
     std::unordered_map<std::string, Territory> territories; 
     std::unordered_map<std::string, std::vector<std::string>> adjacencyList;
 private:
-
 	Phase currentPhase = InitializingTerritories;
-
 public:
-    void addTerritory(const std::string& territoryName ,const std::string& continent,int owner, int forces, Vector2 position, Color color);
+    void addTerritory(const std::string& territoryName ,const std::string& continent,
+                int owner, int forces, Vector2 position, Color color);
     void addBorder(const std::string& territoryName1, const std::string& territoryName2);
     void displayLoadingScreen();
-
 	void drawInitPhase();
 	void drawChoosingTerritoryToReinforce();
 	int getInput(Territory* clickedTerritoryPtr);

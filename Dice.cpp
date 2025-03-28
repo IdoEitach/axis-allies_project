@@ -1,18 +1,23 @@
 #include "Dice.h"
 #include <cmath> // For sine wave
 
-// Constructor: Initialize 3D dice
+/// <summary>
+/// This is the constructor of the dice
+/// </summary>
+/// <param name="pos"></param>
 Dice3D::Dice3D(Vector3 pos) {
     position = pos;
-    rotationAxis = { 1, 1, 0 }; // Rotate around diagonal axis
+    rotationAxis = { 1, 1, 0 }; 
     rotationAngle = 0;
     rolling = false;
-    rollDuration = 5.0f;  // 2 seconds rolling time
+    rollDuration = 5.0f;  // rolling time
     timer = 0;
     finalValue = 1;
 }
 
-// Start rolling animation
+/// <summary>
+/// This function is to start the roll of the dice and the animation
+/// </summary>
 void Dice3D::StartRoll() {
     rolling = true;
     timer = 0;
@@ -20,16 +25,21 @@ void Dice3D::StartRoll() {
     finalValue = GetRandomValue(1, 6);
 }
 
-// Update dice position and rotation
+
+/// <summary>
+/// This function is to update the dice
+/// </summary>
+/// <param name="delta"></param>
 void Dice3D::Update(float delta) {
     if (rolling) {
         timer += delta;
 
-        // Rotate faster at the start, slow down over time
-        rotationAngle += 720 * delta * (1.0f - timer / rollDuration);
+        
+		rotationAngle += 720 * delta * (1.0f - timer / rollDuration);// its starting to slow down
 
-        // Make the dice bounce using a sine wave
-        position.y = 1.0f + sin(timer * 10) * (2.0f - (timer / rollDuration) * 2.0f);
+        
+        position.y = 1.0f + sin(timer * 10) * 
+            (2.0f - (timer / rollDuration) * 2.0f);// Make the dice bounce using a sin wave
 
         // Stop after rollDuration
         if (timer >= rollDuration) {
@@ -40,18 +50,29 @@ void Dice3D::Update(float delta) {
     }
 }
 
-// Draw the 3D dice
+
+/// <summary>
+/// This function is to draw the dice
+/// </summary>
 void Dice3D::Draw() {
     DrawCube(position, 1.0f,1.0f, 1.0f, BLACK);
     DrawCubeWires(position, 1.0f, 1.0f, 1.0f, BLUE);
 }
 
-// Check if dice is rolling
+
+/// <summary>
+/// This function is to check if the dice is rolling
+/// </summary>
+/// <returns></returns>
 bool Dice3D::IsRolling() const {
     return rolling;
 }
 
-// Get the final dice value
+
+/// <summary>
+/// This function is to get the value of the dice
+/// </summary>
+/// <returns></returns>
 int Dice3D::GetValue() const {
     return finalValue;
 }

@@ -50,7 +50,7 @@ int Player::howMuchForcesToAdd() {
 	return std::max(3, territoryCount / 3);
 }
 
-int Player::territoriesNeededForContinent(const RiskBoard& board, const std::string& continent) const {
+int Player::territoriesNeededForContinent(const AxisBoard& board, const std::string& continent) const {
     std::vector<Territory*> territoriesInContinent = board.getTerritoriesInContinent(continent);
     int neededTerritories = 0;
 

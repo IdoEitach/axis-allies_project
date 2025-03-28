@@ -16,10 +16,10 @@ struct Message {
 };
 class MessageManeger {
 private:
-#pragma region ============messages
+
 	std::vector<Message> messages;
 	std::vector<Message> debugMessages;
-#pragma endregion
+
 	
 public:
 	MessageManeger();

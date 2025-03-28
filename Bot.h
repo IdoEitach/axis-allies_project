@@ -8,22 +8,30 @@
 class Bot {
 
 public:
-	Bot(RiskBoard* board);
+	Bot(AxisBoard* board);
 	Territory* chosenTerritoryToInit();
+	Territory* chosenTerritoryToReinforce();
+
 
 private:
-    void init();
-    void evaluateTerritories();
+    void evaluateTerritoriesInit();
     void chooseBestTerritory();
-    void handleContinentThreat();
+    void handleContinentThreatInit();
 	void handleEmptyMap();
-    void done();
+	void reinforceTerritory();
+	void handleContinentThreatReinforce();
+    
 
-    bool isContinentUnderThreat();
+
+    bool isContinentUnderThreatInit();
 	bool isMapIsEmpety();
 
-    RiskBoard* board;
+	bool isContinentUnderThreatReinforce();
+	bool isTerritoryUnderThreatReinforce();
+
+    AxisBoard* board;
     StateMachine stateMachine;
     Territory* chosenTerritory;
 	std::string threatingContinent;
+	std::string threatingTerritory;
 };

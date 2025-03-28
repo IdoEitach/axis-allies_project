@@ -17,7 +17,8 @@ private:
 
 public:
     Territory();
-    Territory(const std::string& name,const std::string& continent, int owner, int forces, Vector2 position, Color color);
+    Territory(const std::string& name,const std::string& continent,
+                int owner, int forces, Vector2 position, Color color);
 
 	float getGrade() const;
 	void setGrade(float newGrade);

@@ -16,9 +16,9 @@ class Bot;
 
 #define NUMBER_OF_TERRITORRIES 9
 
-class RiskGame {
+class AxisGame{
 public:
-    RiskBoard board;
+    AxisBoard board;
 
 private:
     Player player1{ 1 };
@@ -31,8 +31,8 @@ private:
     GamePhase currentPhase;
 
 public:
-    RiskGame();
-    ~RiskGame();
+    AxisGame();
+    ~AxisGame();
     void RunGame();
     void handleInitializationPhase();
     void handlePlayingPhase();
