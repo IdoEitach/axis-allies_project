@@ -8,10 +8,9 @@
    - Each player chooses one territory at a time.
 
 2. **Game Start:**
-   - After all territories have been chosen, players start reinforcing their territories.
-   - Each player receives [territories/3] + forces from the continent.
-   - Let the battles begin 💣: Remember, in a battle, everyone loses except the winner.
-
+   - After all the territories have been chosen, it's time to start reinforcing the territories.
+   - The player that its his turn having amount of [territories/3] + forces from the continnet.
+   - Now all the Fun Starts 💣 : It's time to attack remmber in a battle evryone loses but not the ones who wins  
 ---
 
 ### Loading Screen
