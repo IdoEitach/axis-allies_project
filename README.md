@@ -12,7 +12,7 @@
 2. **Game Start:**
    - After all the territories have been chosen, it's time to start reinforcing the territories.
    - The player that its his turn having amount of [territories/3] + forces from the continnet.
-   - Now all the Fun Starts 💣 : It's time to attack remmber in a battle u evryone loses but not the ones who wins  
+   - Now all the Fun Starts 💣 : It's time to attack remmber in a battle evryone loses but not the ones who wins  
 ---
 
 ### Loading Screen
