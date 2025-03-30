@@ -1,5 +1,5 @@
   ⚠️ Not for the faint of heart! Soldiers will fall, sacrifices will be made, and only the strongest strategist will prevail.
-game logic
+##game logic
   at first each player gets to choose one territory each time.
   now lets start to play the real game 🪖:
 
