@@ -1,8 +1,8 @@
+  ⚠️ Not for the faint of heart! Soldiers will fall, sacrifices will be made, and only the strongest strategist will prevail.
 game logic
   at first each player gets to choose one territory each time.
   now lets start to play the real game 🪖:
 
-  ⚠️ Not for the faint of heart! Soldiers will fall, sacrifices will be made, and only the strongest strategist will prevail.
   after all the territories have been chosen now its the time to start reinforcing the territories 
   
 
