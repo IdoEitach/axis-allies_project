@@ -21,5 +21,3 @@
 ![Game Map](https://github.com/user-attachments/assets/1d4151bd-be22-4b60-8c48-f4c1f3072f64)
 
 ---
-
-This should make the README more readable and visually appealing.
