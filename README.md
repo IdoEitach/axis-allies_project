@@ -1,36 +1,23 @@
-# My Project
-[![GitHub stars](https://img.shields.io/github/stars/IdoEitach/idoeitach.svg)](https://github.com/IdoEitach/idoeitach/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/IdoEitach/idoeitach.svg)](https://github.com/IdoEitach/idoeitach/network)
-[![GitHub issues](https://img.shields.io/github/issues/IdoEitach/idoeitach.svg)](https://github.com/IdoEitach/idoeitach/issues)
-[![GitHub license](https://img.shields.io/github/license/IdoEitach/idoeitach.svg)](https://github.com/IdoEitach/idoeitach/blob/main/LICENSE)
+---
 
 ⚠️ **Not for the faint of heart!** Soldiers will fall, sacrifices will be made, and only the strongest strategist will prevail.
 
-## Description
-Brief description of your project, what it does and its purpose.
+## Game Logic
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+1. **Initial Setup:**
+   - Each player chooses one territory at a time.
 
-## Installation
-Instructions on how to install and setup your project.
+2. **Game Start:**
+   - After all territories have been chosen, players start reinforcing their territories.
+   - Each player receives [territories/3] + forces from the continent.
+   - Let the battles begin 💣: Remember, in a battle, everyone loses except the winner.
 
-## Usage
-Examples of how to use your project.
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=IdoEitach&show_icons=true)
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=IdoEitach&layout=compact)
-![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=IdoEitach)
+---
 
-## Contributing
-Guidelines for contributing to your project.
+### Loading Screen
+![Loading Screen](https://github.com/user-attachments/assets/2313a852-79f0-41dd-9383-e923b6a08183)
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Game Map
+![Game Map](https://github.com/user-attachments/assets/1d4151bd-be22-4b60-8c48-f4c1f3072f64)
 
-## Acknowledgements
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+---
