@@ -116,6 +116,10 @@ void AxisGame::handleInitializationPhase() {
 /// </summary>
 void AxisGame::handlePlayingPhase() {
 	if (currentPlayer == 0) {
+
+		// this is the bot playing turn 
+		// first its reinforcement phase
+		// then its attack phase
 		std::cout << "in player 0 game phase" << std::endl;
 		player0.setAmountOfForcesToAdd();
 		int amountOfForcesToAdd = player0.getAmountOfForcesToAdd();
@@ -126,6 +130,7 @@ void AxisGame::handlePlayingPhase() {
 		bool keepAttacking = true;
 		Territory* attackingTerritory = nullptr;
 		Territory* attackedTerritory = nullptr;
+		
 		while ((bot->attackPhase(attackingTerritory, attackedTerritory))) {
 			// Attack
 			std::cout << "Attacking..." << std::endl;
