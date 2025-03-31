@@ -121,12 +121,74 @@ void AxisGame::handlePlayingPhase() {
 		int amountOfForcesToAdd = player0.getAmountOfForcesToAdd();
 		bot->territoryToReinforce(amountOfForcesToAdd);
 		std::cout << "Reinforced" << std::endl;
-		
 
 
+		bool keepAttacking = true;
+		Territory* attackingTerritory = nullptr;
+		Territory* attackedTerritory = nullptr;
+		while ((bot->attackPhase(attackingTerritory, attackedTerritory))) {
+			// Attack
+			std::cout << "Attacking..." << std::endl;
 
+
+			if (attackingTerritory != nullptr && attackedTerritory != nullptr) {
+
+				board.setPhase(Phase::ChooseTerritoryToAttack);
+				int forcesToDefenceWith = board.getInput(attackedTerritory);
+				while (forcesToDefenceWith > 2 || forcesToDefenceWith > attackedTerritory->getForces()) {
+					forcesToDefenceWith = board.getInput(attackedTerritory);
+					if(forcesToDefenceWith > attackedTerritory->getForces())
+					{
+						std::cout << "u cant defend with more forces than u have " << std::endl;
+					}
+				}
+
+				std::vector<int> valueAttackers;
+				std::vector<int> valueDefenders;
+
+				board.RollCubes();
+
+				int amountToAttackWith = attackingTerritory->getForces() > 3 ? 3 : attackingTerritory->getForces()-1;
+
+				for (int i = 0; i < amountToAttackWith; i++) {
+					valueAttackers.push_back(GetRandomValue(1, 6));
+				}
+
+				std::sort(valueAttackers.begin(), valueAttackers.end(), std::greater<int>());
+
+				for (int i = 0; i < amountToAttackWith; i++) {
+					std::cout << "the value of the attacker dice number " << i << " is: " << valueAttackers[i] << std::endl;
+				}
+
+				for (int i = 0; i < forcesToDefenceWith; i++) {
+					valueDefenders.push_back(GetRandomValue(1, 6));
+				}
+				std::sort(valueDefenders.begin(), valueDefenders.end(), std::greater<int>());
+
+				for (int i = 0; i < forcesToDefenceWith; i++) {
+					std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
+					if (valueAttackers[i] > valueDefenders[i]) {
+						attackedTerritory->AddForces(-1, attackedTerritory->getOwner());
+						player1.addForces(-1);
+					}
+					else {
+						attackingTerritory->AddForces(-1, attackingTerritory->getOwner());
+						player0.addForces(-1);
+					}
+				}
+
+				if (attackedTerritory->getForces() == 0) {
+					attackedTerritory->setOwner(0);
+					attackedTerritory->AddForces(amountToAttackWith, 0);
+					attackingTerritory->AddForces(-amountToAttackWith, 0);
+					player0.addTerritory(attackedTerritory->getName());
+					std::cout << "haha we occuipied ur territory " << std::endl;
+				}
+
+			}
+		}
 	}
-	else {
+	else  {
 		bool keepAttacking = true;
 		float deltaTime = 0;
 		hanleReinforcement();
@@ -185,16 +247,19 @@ void AxisGame::handlePlayingPhase() {
 			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
-	}
 
-	if (board.drawYesNoMessageBox("Do you want to move forces from ur territory ?")) {
-		std::cout << "moving forces" << std::endl;
-		board.setPhase(Phase::MovingForcesFrom);
-		Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
-		std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
-		board.setPhase(Phase::MovingForcesTo);
+
+		if (board.drawYesNoMessageBox("Do you want to move forces from ur territory ?")) {
+			std::cout << "moving forces" << std::endl;
+			board.setPhase(Phase::MovingForcesFrom);
+			Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
+			std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
+			board.setPhase(Phase::MovingForcesTo);
+		}
 	}
 	changePlayerTurn();
+	std::cout << "changed the currnet player \n the current player is: " << currentPlayer << std::endl;
+
 }
 
 

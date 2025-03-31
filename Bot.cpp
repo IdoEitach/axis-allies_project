@@ -237,7 +237,6 @@ void Bot::evaluateTerritoriesInit() {
 }
 
 
-
 /// <summary>
 /// This function is choosing the territory to reinforce 
 /// </summary>
@@ -494,4 +493,148 @@ bool Bot::needToAttack() {
 	}
 	return false;
 }
+
+
+/// <summary>
+/// This function is attacking the enemy territories
+/// only if needed
+/// </summary>
+bool Bot::attackPhase(Territory* &attackingTerritory,
+	Territory* &attackedTerritory) {
+	std::cout << "Attacking..." << std::endl;
+	clearGrades();
+
+	if ((attackingTerritory = chooseTerritoryToAttackFrom()) != nullptr) {
+		if ((attackedTerritory = chooseTerritoryToAttack(attackingTerritory)) != nullptr)
+		{
+			if (hasSufficientForces(attackingTerritory, attackedTerritory)) {
+				return true;
+			}
+		}
+	}
+	return false;
+
+}
+
+
+/// <summary>
+/// This function is checking if the territory is suitable for attack
+/// the idea is to check if the territory has more than 1 adjacent enemy territories
+/// </summary>
+/// <param name="territory"></param>
+/// <returns></returns>
+bool Bot::isTerritorySuitableForAttack(Territory* territory) {
+	return board->adjacencyList[territory->getName()].size() > 1;
+
+}
+
+
+/// <summary>
+/// This function is checking if the bot has sufficient forces to attack
+/// if the bot territory has more than twice the forces in the enemy territory
+/// the bot has sufficient forces to attack
+/// </summary>
+/// <param name="territory"></param>
+/// <returns></returns>
+bool Bot::hasSufficientForces(Territory* attackingTerritory, Territory* attackedTerritory) {
+	return(attackingTerritory->getForces() > 2 * attackedTerritory->getForces());
+}
+
+
+
+/// <summary>
+/// This function chooses the best territory to attack from
+/// </summary>
+Territory* Bot::chooseTerritoryToAttackFrom() {
+	// Evaluate grades for all territories
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == 0) {
+			double grade = 0.0;
+			int adjacentEnemyCount = 0;
+			int totalAdjacentForces = 0;
+
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				Territory& adjTerritory = board->territories[adjName];
+				if (adjTerritory.getOwner() == 1) {
+					adjacentEnemyCount++;
+					totalAdjacentForces += adjTerritory.getForces();
+					grade -= adjTerritory.getForces() * 0.5;
+					grade -= 2.0;
+				}
+				else {
+					grade -= 0.2;
+				}
+			}
+
+			// Decrease the grade for territories with more adjacent enemy territories
+			grade -= adjacentEnemyCount * 1.5;
+
+			// Add more weight to territories with higher forces
+			grade += territory.getForces() * 0.3;
+
+			// Add more weight to territories with potential for future expansion
+			grade += (board->adjacencyList[territory.getName()].size() - adjacentEnemyCount) * 0.5;
+
+			territory.setGrade(grade);
+		}
+	}
+
+	// Choose the best territory based on the grades
+	Territory* bestTerritory = nullptr;
+	double highestGrade = -std::numeric_limits<double>::infinity();
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == 0 && territory.getGrade() > highestGrade) {
+			highestGrade = territory.getGrade();
+			bestTerritory = &territory;
+		}
+	}
+
+	if (bestTerritory != nullptr) {
+		std::cout << "Chosen territory to attack from: " << bestTerritory->getName() << std::endl;
+	}
+	else {
+		std::cout << "No territory to attack from." << std::endl;
+	}
+
+	return bestTerritory;
+}
+
+
+/// <summary>
+/// This function chooses the best territory to attack 
+/// the attacked territory will be the one of the adjacent territories 
+/// to the attacking territory
+/// the bot will choose the territory with the lowest forces from the possible targets
+/// </summary>
+Territory* Bot::chooseTerritoryToAttack(Territory* attackingTerritory) {
+	std::vector<Territory*> possibleTargets;
+
+	for (const std::string& adjName : board->adjacencyList[attackingTerritory->getName()]) {
+		Territory& adjTerritory = board->territories[adjName];
+		if (adjTerritory.getOwner() == 1) {
+			possibleTargets.push_back(&adjTerritory);
+		}
+	}
+
+	if (possibleTargets.empty()) {
+		std::cout << "No territory to attack." << std::endl;
+		return nullptr;
+	}
+
+	Territory* bestTarget = nullptr;
+	double lowestForces = std::numeric_limits<double>::infinity();
+	for (Territory* territory : possibleTargets) {
+		double forces = territory->getForces();
+		if (forces < lowestForces) {
+			lowestForces = forces;
+			bestTarget = territory;
+		}
+	}
+
+	std::cout << "Chosen territory to attack: " << bestTarget->getName() << std::endl;
+	return bestTarget;
+}
+
 
