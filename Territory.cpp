@@ -7,8 +7,12 @@ Territory::Territory(const std::string& name,const std::string& continent, int o
     : name(name), continent(continent), owner(owner), forces(forces), forcesToget(0), position(position), color(color), grade(0.0) {
 } // constructor with parameters
 
+
+
 float Territory::getGrade() const { return grade; }
 void Territory::setGrade(float newGrade) { grade = newGrade; }
+
+
 
 std::string Territory::getName() const { return name; }
 std::string Territory::getContinent() const { return continent; }

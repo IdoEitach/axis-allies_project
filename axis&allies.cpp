@@ -53,6 +53,7 @@ void AxisGame::handleInitializationPhase() {
 	if (counterOfSelectedTerritories == NUMBER_OF_TERRITORRIES) {
 		board.setPhase(Phase::ReinforcingChooseTerritory);
 		currentPhase = PLAYING;
+		currentPlayer = 0;
 		EndDrawing();
 		return;
 	}
@@ -117,6 +118,13 @@ void AxisGame::handlePlayingPhase() {
 	if (currentPlayer == 0) {
 		std::cout << "in player 0 game phase" << std::endl;
 		player0.setAmountOfForcesToAdd();
+		int amountOfForcesToAdd = player0.getAmountOfForcesToAdd();
+		bot->territoryToReinforce(amountOfForcesToAdd);
+		std::cout << "Reinforced" << std::endl;
+		
+
+
+
 	}
 	else {
 		bool keepAttacking = true;
@@ -188,38 +196,50 @@ void AxisGame::handlePlayingPhase() {
 	}
 	changePlayerTurn();
 }
-Territory* AxisGame::chossingTerritoryToMoveFrom() {
+
+
+/// <summary>
+/// This function is handling the reinforcement phase
+/// </summary>
+void AxisGame::hanleReinforcement() {
 	float deltaTime = 0;
+	std::cout << "in player 1 game phase" << std::endl;
+	player1.setAmountOfForcesToAdd();
 
-	Territory* clickTerritoryPtr = board.checkClick();
-
-	while (clickTerritoryPtr == nullptr) {
+	while (player1.getAmountOfForcesToAdd() > 0) {
 		deltaTime = GetFrameTime();
-		messageManeger.updateMessages(deltaTime);
+
 		BeginDrawing();
-		board.drawChoosingTerritoryToMoveFrom();
+		ClearBackground(RAYWHITE);
+		board.drawBoard();
+		board.drawForcesInfo();
+		board.setPhase(Phase::ReinforcingChooseTerritory);
+		messageManeger.updateMessages(deltaTime);
 		messageManeger.drawMessages();
-		clickTerritoryPtr = board.checkClick();
-		if (clickTerritoryPtr != nullptr) {
-			if (clickTerritoryPtr->getOwner() != currentPlayer) {
-				clickTerritoryPtr = nullptr;
-				messageManeger.addMessage("You can only move from your own territories", 2.0f);
+
+		Territory* clickedTerritoryPtr = board.checkClick();
+
+		if (clickedTerritoryPtr != nullptr) {
+			// Redraw the board in each iteration
+			board.drawBoard();
+			if (clickedTerritoryPtr->getOwner() == 1) {
+				board.setPhase(Phase::ReinforcingAddForces);
+				int forces = board.getInput(clickedTerritoryPtr);
+				std::cout << "the amount left to add is :" << player1.getAmountOfForcesToAdd() << std::endl;
+
+				player1.reinForcement(forces, clickedTerritoryPtr); // reinforeme
+				std::cout << "remaining" << player1.getAmountOfForcesToAdd() << std::endl;
+				std::cout << "the amount left to add is :" << player1.getAmountOfForcesToAdd() << std::endl;
+				std::cout << "the forces of the clicked territory are: " << clickedTerritoryPtr->getForces() << std::endl;
+				EndDrawing();
 			}
-			else if (clickTerritoryPtr->getForces() <= 1) {
-				clickTerritoryPtr = nullptr;
-				messageManeger.addMessage("You can only move from territories with more than one force ", 2.0f);
-			}
-			else {
-				if (!board.hasAdjacentEnemies(clickTerritoryPtr->getName(), currentPlayer ^ 1)) {
-					clickTerritoryPtr = nullptr;
-					messageManeger.addMessage("You can only move from territories with adjacent ownedTerritories", 2.0f);
-				}
+			else
+			{
+				messageManeger.addMessage("You can only add forces to your territories", 2.0f);
 			}
 		}
 		EndDrawing();
 	}
-
-	return clickTerritoryPtr;
 }
 
 
@@ -285,6 +305,47 @@ Territory* AxisGame::ChoosingTeritorryToAttackFrom(int* forcesToAttackWith) {
 	return nullptr;
 }
 
+
+/// <summary>
+/// This function is to choose the territory to move forces from
+/// </summary>
+/// <returns></returns>
+Territory* AxisGame::chossingTerritoryToMoveFrom() {
+	float deltaTime = 0;
+
+	Territory* clickTerritoryPtr = board.checkClick();
+
+	while (clickTerritoryPtr == nullptr) {
+		deltaTime = GetFrameTime();
+		messageManeger.updateMessages(deltaTime);
+		BeginDrawing();
+		board.drawChoosingTerritoryToMoveFrom();
+		messageManeger.drawMessages();
+		clickTerritoryPtr = board.checkClick();
+		if (clickTerritoryPtr != nullptr) {
+			if (clickTerritoryPtr->getOwner() != currentPlayer) {
+				clickTerritoryPtr = nullptr;
+				messageManeger.addMessage("You can only move from your own territories", 2.0f);
+			}
+			else if (clickTerritoryPtr->getForces() <= 1) {
+				clickTerritoryPtr = nullptr;
+				messageManeger.addMessage("You can only move from territories with more than one force ", 2.0f);
+			}
+			else {
+				if (!board.hasAdjacentEnemies(clickTerritoryPtr->getName(), currentPlayer ^ 1)) {
+					clickTerritoryPtr = nullptr;
+					messageManeger.addMessage("You can only move from territories with adjacent ownedTerritories", 2.0f);
+				}
+			}
+		}
+		EndDrawing();
+	}
+
+	return clickTerritoryPtr;
+}
+
+
+
 /// <summary>
 /// This function is to choose Territory to attack
 /// </summary>
@@ -322,50 +383,6 @@ Territory* AxisGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 	}
 
 	return clickTerritoryPtr;
-}
-
-/// <summary>
-/// This function is handling the reinforcement phase
-/// </summary>
-void AxisGame::hanleReinforcement() {
-	float deltaTime = 0;
-	std::cout << "in player 1 game phase" << std::endl;
-	player1.setAmountOfForcesToAdd();
-
-	while (player1.getAmountOfForcesToAdd() > 0) {
-		deltaTime = GetFrameTime();
-
-		BeginDrawing();
-		ClearBackground(RAYWHITE);
-		board.drawBoard();
-		board.drawForcesInfo();
-		board.setPhase(Phase::ReinforcingChooseTerritory);
-		messageManeger.updateMessages(deltaTime);
-		messageManeger.drawMessages();
-
-		Territory* clickedTerritoryPtr = board.checkClick();
-
-		if (clickedTerritoryPtr != nullptr) {
-			// Redraw the board in each iteration
-			board.drawBoard();
-			if (clickedTerritoryPtr->getOwner() == 1) {
-				board.setPhase(Phase::ReinforcingAddForces);
-				int forces = board.getInput(clickedTerritoryPtr);
-				std::cout << "the amount left to add is :" << player1.getAmountOfForcesToAdd() << std::endl;
-
-				player1.reinForcement(forces, clickedTerritoryPtr); // reinforeme
-				std::cout << "remaining" << player1.getAmountOfForcesToAdd() << std::endl;
-				std::cout << "the amount left to add is :" << player1.getAmountOfForcesToAdd() << std::endl;
-				std::cout << "the forces of the clicked territory are: " << clickedTerritoryPtr->getForces() << std::endl;
-				EndDrawing();
-			}
-			else
-			{
-				messageManeger.addMessage("You can only add forces to your territories", 2.0f);
-			}
-		}
-		EndDrawing();
-	}
 }
 
 

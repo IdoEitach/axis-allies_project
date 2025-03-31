@@ -1,20 +1,11 @@
-﻿  Axis&alliesBoard.cpp
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(196,61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(196,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(198,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(198,31): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(200,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Axis&alliesBoard.cpp(200,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Bot.cpp
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(119,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(197,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Dice.cpp
-C:\Users\ido\פרויקט\axis-allies_project\Dice.cpp(38,46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  MessageManger.cpp
-  Player.cpp
+﻿  Bot.cpp
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(141,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(228,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(323,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(376,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   axis&allies.cpp
-C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(392,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(392,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(442,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(442,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating Code...
   axis&allies.vcxproj -> C:\Users\ido\פרויקט\axis-allies_project\x64\Debug\axis&allies.exe
   'pwsh.exe' is not recognized as an internal or external command,

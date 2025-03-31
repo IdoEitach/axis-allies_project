@@ -5,12 +5,21 @@ Bot::Bot(AxisBoard* board) : board(board), chosenTerritory(nullptr), threatingCo
 }
 
 
+void Bot::clearGrades() {
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		territory.setGrade(0.0);
+	}
+}
+
+
 /// <summary>
 /// This function is choosing the territory to init
 /// it is using a state machine to choose the territory
 /// </summary>
 /// <returns></returns>
 Territory* Bot::chosenTerritoryToInit() {
+	clearGrades();
 	stateMachine.addTransition([this]() { return this->isMapIsEmpety(); }, [this]() { this->handleEmptyMap(); });
 	stateMachine.addTransition([this]() { return this->isContinentUnderThreatInit(); }, [this]() { this->handleContinentThreatInit(); });
 	stateMachine.addTransition([this]() { return true; }, [this]() { this->evaluateTerritoriesInit(); });
@@ -148,7 +157,7 @@ void Bot::handleContinentThreatInit() {
 /// <summary>
 /// This is choosing the best territory to 
 /// </summary>
-void Bot::chooseBestTerritory() {
+void Bot::chooseBestTerritoryToInit() {
 	chosenTerritory = nullptr;
 	double highestGrade = -std::numeric_limits<double>::infinity();
 
@@ -162,7 +171,12 @@ void Bot::chooseBestTerritory() {
 			}
 		}
 	}
-	std::cout << "Chosen territory: " << chosenTerritory->getName() << std::endl;
+	if (chosenTerritory != nullptr) {
+		std::cout << "Chosen territory: " << chosenTerritory->getName() << std::endl;
+	}
+	else {
+		std::cout << "No territory chosen." << std::endl;
+	}
 }
 
 
@@ -228,9 +242,87 @@ void Bot::evaluateTerritoriesInit() {
 /// This function is choosing the territory to reinforce 
 /// </summary>
 /// <returns></returns>
-Territory* Bot::chosenTerritoryToReinforce() {
-	stateMachine.addTransition([this]() { return this->isTerritoryUnderThreatReinforce(); },
-		[this]() { this->handleContinentThreatReinforce(); });
+Territory* Bot::territoryToReinforce(int forcesToReinforce) {
+	std::cout << "Reinforceing" << std::endl;
+	while (forcesToReinforce > 0) {
+		clearGrades();
+		givingUpTerritories.clear();
+		stateMachine.addTransition([this]() { return this->isTerritoryUnderThreatReinforce(); },
+			[this]() { this->handleContinentThreatReinforce(); });
+		stateMachine.addTransition([this]() { return this->isContinentUnderThreatReinforce(); },
+			[this]() { this->handleContinentThreatReinforce(); });
+		stateMachine.addTransition([this]() { return this->isTerritoryUndErencircle(); },
+			[this]() { this->handleTerritoryUndErencircleReinforce(); });
+		stateMachine.addTransition([this]() { return true; },
+			[this]() { this->evaluateTerritoriesReinforce(); });
+		stateMachine.run();
+		chooseBestTerritoryToReinforce();
+		std::cout << "Chosen territory before adding: " << chosenTerritory->getName()
+			<< " amount of Forces: " << chosenTerritory->getForces() << std::endl;
+		// Determine how many forces to add based on the threat level and strategic importance
+		int howMuchToAdd = calculateForcesToAdd(chosenTerritory, forcesToReinforce);
+		chosenTerritory->AddForces(howMuchToAdd, 0); // Assuming 0 is the bot's owner ID
+		forcesToReinforce -= howMuchToAdd;
+
+		std::cout << "Added " << howMuchToAdd << " forces to " << chosenTerritory->getName() << std::endl;
+
+		stateMachine.removeTransition([this]() { return this->isTerritoryUnderThreatReinforce(); });
+		stateMachine.removeTransition([this]() { return this->isContinentUnderThreatReinforce(); });
+		stateMachine.removeTransition([this]() { return this->isTerritoryUndErencircle(); });
+		stateMachine.removeTransition([this]() { return true; });
+	}
+	return chosenTerritory;
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="territory"></param>
+/// <param name="availableForces"></param>
+/// <returns></returns>
+int Bot::calculateForcesToAdd(Territory* territory, int availableForces) {
+	int threatLevel = 0;
+	for (const std::string& adjName : board->adjacencyList[territory->getName()]) {
+		Territory& adjTerritory = board->territories[adjName];
+		if (adjTerritory.getOwner() == 1) {
+			threatLevel += adjTerritory.getForces();
+		}
+	}
+
+	int forcesToAdd = std::min(availableForces, threatLevel - territory->getForces() + 1);
+	forcesToAdd = std::max(forcesToAdd, 1); // Ensure at least 1 force is added
+	return forcesToAdd;
+}
+
+
+/// <summary>
+/// This function is handling the territory under encircle in the reinforce phase
+/// it will grade the territories that are under encircle and give them a grade
+/// the grade will be the amount of adjacent territories that are owned by the bot * 0.5
+/// and the amount of forces in the adjacent territories * 1.2
+/// the bot will not choose the territories that are giving up
+/// the bot will choose the territory with the highest grade
+/// </summary>
+void Bot::handleTerritoryUndErencircleReinforce() {
+	std::cout << "Handling territory under encircle..." << std::endl;
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == 0) {
+			double grade = 0.0;
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				Territory& adjTerritory = board->territories[adjName];
+				if (adjTerritory.getOwner() == territory.getOwner()) {
+					grade += adjTerritory.getForces() * 0.5;
+					grade += 2.0;
+				}
+				else {
+					grade -= 0.2;
+				}
+			}
+			territory.setGrade(grade);
+		}
+	}
 }
 
 
@@ -238,10 +330,96 @@ Territory* Bot::chosenTerritoryToReinforce() {
 /// This function is handling the continent threat in the reinforce phase
 /// </summary>
 void Bot::handleContinentThreatReinforce() {
+	std::vector<Territory*> continentTerritories = board->getTerritoriesInContinent(threatingContinent);
+
+	std::cout << "Handling continent threat..." << std::endl;
+	std::cout << "The continent under threat is: " << threatingContinent << std::endl;
 
 
 }
 
+
+void Bot::chooseBestTerritoryToReinforce() {
+	double highestGrade = -std::numeric_limits<double>::infinity();
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == 0 && territory.getGrade() > highestGrade) {
+			highestGrade = territory.getGrade();
+			chosenTerritory = &territory;
+		}
+	}
+}
+
+
+/// <summary>
+/// This function is evaluating the territories for the reinforce phase
+/// this is a generic function that will give the territories a grade
+/// the grade will be the amount of adjacent territories that are owned by the bot * 0.5
+/// and the amount of forces in the adjacent territories * 1.2
+/// </summary>
+void Bot::evaluateTerritoriesReinforce() {
+
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == -1) {
+			double grade = 0.0;
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				Territory& adjTerritory = board->territories[adjName];
+				if (adjTerritory.getOwner() == territory.getOwner()) {
+					grade += adjTerritory.getForces() * 0.5;
+					grade += 2.0;
+				}
+				else {
+					grade -= 0.2;
+				}
+			}
+			territory.setGrade(grade);
+		}
+	}
+
+}
+
+
+/// <summary>
+/// This function is checking if the territory is under encircle 
+/// the idea is to check the amount of adjacent territories the enemy has 
+/// if he has more than 2 adjacent territories the territory is under encircle
+/// but if the enemy has more than half of the forces in the adjacent territories
+/// than the bot state is to give up
+/// </summary>
+/// <returns></returns>
+bool Bot::isTerritoryUndErencircle() {
+	bool anyTerritoryUnderEncircle = false;
+
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		int enemyAdjacentCount = 0;
+		int totalAdjacentCount = 0;
+		int enemyForces = 0;
+		int totalForces = 0;
+
+		for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+			Territory& adjTerritory = board->territories[adjName];
+			totalAdjacentCount++;
+			totalForces += adjTerritory.getForces();
+
+			if (adjTerritory.getOwner() == 1) { // Assuming 1 is the enemy's owner ID
+				enemyAdjacentCount++;
+				enemyForces += adjTerritory.getForces();
+			}
+		}
+
+		if (enemyAdjacentCount >= totalAdjacentCount - 1) {
+			givingUpTerritories.push_back(territory.getName());
+		}
+
+		if (enemyAdjacentCount > 2 && enemyForces > totalForces / 2) {
+			anyTerritoryUnderEncircle = true;
+		}
+	}
+
+	return anyTerritoryUnderEncircle;
+}
 
 /// <summary>
 /// the idea of this function is to check if the continent is under threat
@@ -272,7 +450,6 @@ bool Bot::isContinentUnderThreatReinforce() {
 		}
 	}
 	return false;
-
 }
 
 
@@ -292,3 +469,29 @@ bool Bot::isTerritoryUnderThreatReinforce() {
 	}
 	return false;
 }
+
+
+/// <summary>
+/// The idea is to check if there is any territory the player ownes
+/// and the territory has more than twice in each adjacsnt enemy territory
+/// </summary>
+/// <returns></returns>
+bool Bot::needToAttack() {
+	for (const auto& pair : board->territories) {
+		const Territory& territory = pair.second;
+		if (territory.getOwner() == 0) {
+			bool shouldAttack = true;
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				const Territory& adjTerritory = board->territories[adjName];
+				if (adjTerritory.getOwner() == 1 && territory.getForces() <= 2 * adjTerritory.getForces()) {
+					shouldAttack = false;
+				}
+			}
+			if (shouldAttack) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
