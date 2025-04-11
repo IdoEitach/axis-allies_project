@@ -14,6 +14,8 @@ private:
     int territoryCount;
     int amountOfForcesToAdd;
     std::vector<std::string> territoriesOwned;
+    bool attackedWithPlane;
+	bool movedWithPlane;
 
 public:
     Player(int id);
@@ -31,6 +33,12 @@ public:
     void setAmountOfForcesToAdd();
     void reinForcement(int amount, Territory* terrotiryPtr);
     int territoriesNeededForContinent(const AxisBoard& board, const std::string& continent) const; // Add this method
+    void setAttackedWithPlane(bool attackedWithPlane);
+	bool getAttackedWithPlane() const;
+
+    void setMovedWithPlane(bool movedWithPlane);
+	bool getMovedWithPlane() const;
+
 private:
 
     int howMuchForcesToAdd();

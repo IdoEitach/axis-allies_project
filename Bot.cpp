@@ -13,6 +13,10 @@ void Bot::clearGrades() {
 }
 
 
+int Bot::howMuchForcesToDefendWith(Territory & attackedTerritory){
+return attackedTerritory.getForces() > 2 ? 2 : attackedTerritory.getForces();
+}
+
 /// <summary>
 /// This function is choosing the territory to init
 /// it is using a state machine to choose the territory
@@ -297,7 +301,7 @@ int Bot::calculateForcesToAdd(Territory* territory, int availableForces) {
 
 /// <summary>
 /// This function is handling the territory under encircle in the reinforce phase
-/// it will grade the territories that are under encircle and give them a grade
+/// /// it will grade the territories that are under encircle and give them a grade
 /// the grade will be the amount of adjacent territories that are owned by the bot * 0.5
 /// and the amount of forces in the adjacent territories * 1.2
 /// the bot will not choose the territories that are giving up
@@ -305,9 +309,12 @@ int Bot::calculateForcesToAdd(Territory* territory, int availableForces) {
 /// </summary>
 void Bot::handleTerritoryUndErencircleReinforce() {
 	std::cout << "Handling territory under encircle..." << std::endl;
+	Territory* bestTerritory = nullptr;
+	double highestGrade = -std::numeric_limits<double>::infinity();
+
 	for (auto& pair : board->territories) {
 		Territory& territory = pair.second;
-		if (territory.getOwner() == 0) {
+		if (territory.getOwner() == 0 && std::find(givingUpTerritories.begin(), givingUpTerritories.end(), territory.getName()) == givingUpTerritories.end()) {
 			double grade = 0.0;
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				Territory& adjTerritory = board->territories[adjName];
@@ -320,9 +327,22 @@ void Bot::handleTerritoryUndErencircleReinforce() {
 				}
 			}
 			territory.setGrade(grade);
+			if (grade > highestGrade) {
+				highestGrade = grade;
+				bestTerritory = &territory;
+			}
 		}
 	}
+	chosenTerritory = bestTerritory;
+	if (chosenTerritory != nullptr) {
+		std::cout << "Chosen territory: " << chosenTerritory->getName() << std::endl;
+	}
+	else {
+		std::cout << "No territory chosen." << std::endl;
+	}
 }
+
+
 
 
 /// <summary>
@@ -478,116 +498,84 @@ bool Bot::isTerritoryUnderThreatReinforce() {
 bool Bot::needToAttack() {
 	for (const auto& pair : board->territories) {
 		const Territory& territory = pair.second;
-		if (territory.getOwner() == 0) {
-			bool shouldAttack = true;
+		if (territory.getOwner() == 0) { // אם הטריטוריה שייכת לבוט
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				const Territory& adjTerritory = board->territories[adjName];
-				if (adjTerritory.getOwner() == 1 && territory.getForces() <= 2 * adjTerritory.getForces()) {
-					shouldAttack = false;
+				if (adjTerritory.getOwner() == 1 && territory.getForces() >= 2 * adjTerritory.getForces()) { // אם הטריטוריה השכנה שייכת לאויב ויש לה פחות מחצי כוחות
+					return true;
 				}
-			}
-			if (shouldAttack) {
-				return true;
 			}
 		}
 	}
 	return false;
 }
-
 
 /// <summary>
 /// This function is attacking the enemy territories
 /// only if needed
 /// </summary>
-bool Bot::attackPhase(Territory* &attackingTerritory,
-	Territory* &attackedTerritory) {
+bool Bot::attackPhase(Territory*& attackingTerritory, Territory*& attackedTerritory) {
 	std::cout << "Attacking..." << std::endl;
 	clearGrades();
 
-	if ((attackingTerritory = chooseTerritoryToAttackFrom()) != nullptr) {
-		if ((attackedTerritory = chooseTerritoryToAttack(attackingTerritory)) != nullptr)
-		{
-			if (hasSufficientForces(attackingTerritory, attackedTerritory)) {
-				return true;
+	if (needToAttack()) {
+		if ((attackingTerritory = chooseTerritoryToAttackFrom()) != nullptr) {
+			if ((attackedTerritory = chooseTerritoryToAttack(attackingTerritory)) != nullptr) {
+				if (hasSufficientForces(attackingTerritory, attackedTerritory)) {
+					return true;
+				}
 			}
 		}
 	}
+	else {
+		std::cout << "No need to attack." << std::endl;
+	}
 	return false;
-
 }
 
 
-/// <summary>
-/// This function is checking if the territory is suitable for attack
-/// the idea is to check if the territory has more than 1 adjacent enemy territories
-/// </summary>
-/// <param name="territory"></param>
-/// <returns></returns>
-bool Bot::isTerritorySuitableForAttack(Territory* territory) {
-	return board->adjacencyList[territory->getName()].size() > 1;
-
-}
 
 
 /// <summary>
-/// This function is checking if the bot has sufficient forces to attack
+/// This function checks if the bot has sufficient forces to attack
 /// if the bot territory has more than twice the forces in the enemy territory
 /// the bot has sufficient forces to attack
 /// </summary>
-/// <param name="territory"></param>
+/// <param name="attackingTerritory"></param>
+/// <param name="attackedTerritory"></param>
 /// <returns></returns>
 bool Bot::hasSufficientForces(Territory* attackingTerritory, Territory* attackedTerritory) {
-	return(attackingTerritory->getForces() > 2 * attackedTerritory->getForces());
+	return (attackingTerritory->getForces() >= 2 * attackedTerritory->getForces());
 }
-
 
 
 /// <summary>
 /// This function chooses the best territory to attack from
 /// </summary>
+
+
 Territory* Bot::chooseTerritoryToAttackFrom() {
-	// Evaluate grades for all territories
+	Territory* bestTerritory = nullptr;
+	double highestForces = -1; // Fixed initialization
+
 	for (auto& pair : board->territories) {
 		Territory& territory = pair.second;
 		if (territory.getOwner() == 0) {
-			double grade = 0.0;
-			int adjacentEnemyCount = 0;
-			int totalAdjacentForces = 0;
-
+			// Check if the territory can attack any adjacent enemy territories
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				Territory& adjTerritory = board->territories[adjName];
 				if (adjTerritory.getOwner() == 1) {
-					adjacentEnemyCount++;
-					totalAdjacentForces += adjTerritory.getForces();
-					grade -= adjTerritory.getForces() * 0.5;
-					grade -= 2.0;
-				}
-				else {
-					grade -= 0.2;
+					// Found an enemy neighbor, check if we have enough forces
+					if (territory.getForces() >= 2 * adjTerritory.getForces()) {
+						// This territory can attack, check if it has more forces than the current best
+						if (territory.getForces() > highestForces) {
+							highestForces = territory.getForces();
+							bestTerritory = &territory;
+						}
+						break; // No need to check other neighbors if we can already attack
+					}
 				}
 			}
-
-			// Decrease the grade for territories with more adjacent enemy territories
-			grade -= adjacentEnemyCount * 1.5;
-
-			// Add more weight to territories with higher forces
-			grade += territory.getForces() * 0.3;
-
-			// Add more weight to territories with potential for future expansion
-			grade += (board->adjacencyList[territory.getName()].size() - adjacentEnemyCount) * 0.5;
-
-			territory.setGrade(grade);
-		}
-	}
-
-	// Choose the best territory based on the grades
-	Territory* bestTerritory = nullptr;
-	double highestGrade = -std::numeric_limits<double>::infinity();
-	for (auto& pair : board->territories) {
-		Territory& territory = pair.second;
-		if (territory.getOwner() == 0 && territory.getGrade() > highestGrade) {
-			highestGrade = territory.getGrade();
-			bestTerritory = &territory;
 		}
 	}
 
@@ -601,13 +589,13 @@ Territory* Bot::chooseTerritoryToAttackFrom() {
 	return bestTerritory;
 }
 
-
 /// <summary>
 /// This function chooses the best territory to attack 
 /// the attacked territory will be the one of the adjacent territories 
 /// to the attacking territory
 /// the bot will choose the territory with the lowest forces from the possible targets
 /// </summary>
+
 Territory* Bot::chooseTerritoryToAttack(Territory* attackingTerritory) {
 	std::vector<Territory*> possibleTargets;
 
@@ -637,4 +625,30 @@ Territory* Bot::chooseTerritoryToAttack(Territory* attackingTerritory) {
 	return bestTarget;
 }
 
+/// <summary>
+/// 
+/// </summary>
+bool Bot::needToAttackWithPlane() {
+	// Iterate through all territories owned by the bot
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == 0) { // 0 is the bot's owner ID
 
+			// Check adjacent territories for potential attacks
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				Territory& adjTerritory = board->territories[adjName];
+				if (adjTerritory.getOwner() == 1) { // 1 is the enemy's owner ID
+					// If the bot has more than twice the forces of the adjacent enemy territory,
+					// it means the bot can attack without needing the plane
+					if (territory.getForces() > 2 * adjTerritory.getForces()) {
+						return false; // No need to attack with a plane
+					}
+				}
+			}
+		}
+	}
+
+	// If the bot doesn't have any adjacent enemy territories that it can easily attack,
+	// it should attack with a plane
+	return true; // Need to attack with a plane
+}

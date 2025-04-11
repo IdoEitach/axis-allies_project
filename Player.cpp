@@ -114,3 +114,18 @@ int Player::territoriesNeededForContinent(const AxisBoard& board, const std::str
     }
     return neededTerritories;
 }
+
+
+void Player::setAttackedWithPlane(bool attackedWithPlane) {
+	this->attackedWithPlane = attackedWithPlane;
+}
+bool Player::getAttackedWithPlane() const {
+	return attackedWithPlane;
+}
+
+void Player::setMovedWithPlane(bool movedWithPlane) {
+	this->movedWithPlane = movedWithPlane;
+}
+bool Player::getMovedWithPlane() const {
+	return movedWithPlane;
+}

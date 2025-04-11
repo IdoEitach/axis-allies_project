@@ -17,20 +17,22 @@ public:
 	Bot(AxisBoard* board);
 	Territory* chosenTerritoryToInit();
 	Territory* territoryToReinforce(int forcesToReinforce);
-	bool attackPhase(Territory* &attackingTerritory,
-		Territory* &attackedTerritory);
+	bool attackPhase(Territory*& attackingTerritory,
+		Territory*& attackedTerritory);
+	bool needToAttackWithPlane();
+	int howMuchForcesToDefendWith(Territory & attackedTerritory );
+	bool needToMoveForcesWithPlane();
 
 private:
 
 	void clearGrades();
 
-	BotState botState = BotState::Fight;
+
 	void evaluateTerritoriesInit();
 	void chooseBestTerritoryToInit();
 	void chooseBestTerritoryToReinforce();
 	void handleContinentThreatInit();
 	void handleEmptyMap();
-
 
 
 	void handleContinentThreatReinforce();
@@ -47,6 +49,8 @@ private:
 
 
 	bool needToAttack();
+
+
 
 private:
 	bool isTerritorySuitableForAttack(Territory* territory);

@@ -123,6 +123,7 @@ void AxisGame::handlePlayingPhase() {
 		std::cout << "in player 0 game phase" << std::endl;
 		player0.setAmountOfForcesToAdd();
 		int amountOfForcesToAdd = player0.getAmountOfForcesToAdd();
+		// reinforcement phase
 		bot->territoryToReinforce(amountOfForcesToAdd);
 		std::cout << "Reinforced" << std::endl;
 
@@ -130,11 +131,10 @@ void AxisGame::handlePlayingPhase() {
 		bool keepAttacking = true;
 		Territory* attackingTerritory = nullptr;
 		Territory* attackedTerritory = nullptr;
-		
+
 		while ((bot->attackPhase(attackingTerritory, attackedTerritory))) {
 			// Attack
 			std::cout << "Attacking..." << std::endl;
-
 
 			if (attackingTerritory != nullptr && attackedTerritory != nullptr) {
 
@@ -142,10 +142,11 @@ void AxisGame::handlePlayingPhase() {
 				int forcesToDefenceWith = board.getInput(attackedTerritory);
 				while (forcesToDefenceWith > 2 || forcesToDefenceWith > attackedTerritory->getForces()) {
 					forcesToDefenceWith = board.getInput(attackedTerritory);
-					if(forcesToDefenceWith > attackedTerritory->getForces())
+					if (forcesToDefenceWith > attackedTerritory->getForces())
 					{
 						std::cout << "u cant defend with more forces than u have " << std::endl;
 					}
+
 				}
 
 				std::vector<int> valueAttackers;
@@ -153,7 +154,7 @@ void AxisGame::handlePlayingPhase() {
 
 				board.RollCubes();
 
-				int amountToAttackWith = attackingTerritory->getForces() > 3 ? 3 : attackingTerritory->getForces()-1;
+				int amountToAttackWith = attackingTerritory->getForces() > 3 ? 3 : attackingTerritory->getForces() - 1;
 
 				for (int i = 0; i < amountToAttackWith; i++) {
 					valueAttackers.push_back(GetRandomValue(1, 6));
@@ -188,31 +189,56 @@ void AxisGame::handlePlayingPhase() {
 					attackingTerritory->AddForces(-amountToAttackWith, 0);
 					player0.addTerritory(attackedTerritory->getName());
 					std::cout << "haha we occuipied ur territory " << std::endl;
+					if (checkVictory()) {
+						std::cout << "Player 0 wins!" << std::endl;
+						currentPhase = END_GAME;
+						return;
+					}
 				}
 
 			}
 		}
+		if (!player0.getAttackedWithPlane()) {
+			if (bot->needToAttackWithPlane())
+			{
+				attackWithPlane();
+				std::cout << "attacking with plane" << std::endl;
+				player0.setAttackedWithPlane(true);
+			}
+		}
 	}
-	else  {
+	else {
 		bool keepAttacking = true;
 		float deltaTime = 0;
+		//reinforcement phase
 		hanleReinforcement();
 		std::string input;
 		keepAttacking = board.drawYesNoMessageBox("Do you want to attack?");
 		std::cout << "keep attacking is: " << keepAttacking << std::endl;
 
+		// attack phase
 		while (keepAttacking) {
+			// does the player want to attack with plane
+			if (!player1.getAttackedWithPlane()) {
+				if (board.drawYesNoMessageBox("Do u want to attack with plane ?")) {
+					attackWithPlane();
+					std::cout << "attacking with plane" << std::endl;
+					player1.setAttackedWithPlane(true);
+				}
+			}
+			//choose territory to attack from
 			board.setPhase(Phase::ChooseTerritoryToAttackFrom);
 			int forcesToAttackWith, forcesToDefenceWith;
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 			Territory* chosenToAttackFrom = ChoosingTeritorryToAttackFrom(&forcesToAttackWith);
 			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
 			board.setPhase(Phase::ChooseTerritoryToAttack);
+			//choose territory to attack
 			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom, forcesToDefenceWith);
 
 			std::vector <int> valueAttackers;
 			std::vector <int> valueDefenders;
-
+			//rolling the cubes and getting who is the winner of the battle
 			board.RollCubes();
 
 			std::cout << "the forces to attack with are: " << forcesToAttackWith << std::endl;
@@ -247,19 +273,32 @@ void AxisGame::handlePlayingPhase() {
 				chosenToAttack->setOwner(currentPlayer);
 				chosenToAttack->AddForces(forcesToAttackWith, currentPlayer);
 				chosenToAttackFrom->AddForces(-forcesToAttackWith, currentPlayer);
-				currentPlayer == player0.getId() ? player0.addTerritory(chosenToAttack->getName()) : player1.addTerritory(chosenToAttack->getName());
+				player1.addTerritory(chosenToAttack->getName());
+				if (checkVictory()) {
+					std::cout << "Player 1 wins!" << std::endl;
+					currentPhase = END_GAME;
+					return;
+				}
 			}
 			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 
+		// ask the 
+		if (!player1.getMovedWithPlane()) {
 
-		if (board.drawYesNoMessageBox("Do you want to move forces from ur territory ?")) {
-			std::cout << "moving forces" << std::endl;
-			board.setPhase(Phase::MovingForcesFrom);
-			Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
-			std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
-			board.setPhase(Phase::MovingForcesTo);
+			if (board.drawYesNoMessageBox("Do you want to move forces from ur territory with plane ?")) {
+				std::cout << "moving forces with plane" << std::endl;
+				board.setPhase(Phase::MovingForcesFrom);
+				Territory* chosenToMoveFrom = chossingTerritoryToMoveFrom();
+				std::cout << "the chosen territory to move from is: " << chosenToMoveFrom->getName() << std::endl;
+				int forcesToMove = board.getInput(chosenToMoveFrom);
+				moveForcesWithPlane(chosenToMoveFrom, forcesToMove);
+				std::cout << "the forces to move are: " << forcesToMove << std::endl;
+				player1.setMovedWithPlane(true);
+				std::cout << "moved forces with plane" << std::endl;
+
+			}
 		}
 	}
 	changePlayerTurn();
@@ -457,6 +496,115 @@ Territory* AxisGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 
 
 /// <summary>
+/// This function is meant to attack with plane.
+/// it choose randomly one of the enemy territories
+/// and attack it with 3 forces
+/// </summary>
+void AxisGame::attackWithPlane() {
+	std::cout << "Attacking with a plane..." << std::endl;
+
+	// 1. Create a list of potential target territories (all enemy territories)
+	std::vector<Territory*> potentialTargets;
+	for (auto& pair : board.territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() != currentPlayer) { // Enemy territory
+			potentialTargets.push_back(&territory);
+		}
+	}
+
+	// 2. If there are no potential targets, exit the function
+	if (potentialTargets.empty()) {
+		std::cout << "No valid targets for plane attack." << std::endl;
+		return;
+	}
+
+	// 3. Choose a random target territory from the list of potential targets
+	// Seed the random number generator (only do this once at the beginning of the game)
+	static bool seeded = false;
+	if (!seeded) {
+		srand(time(0));
+		seeded = true;
+	}
+	int randomIndex = rand() % potentialTargets.size();
+	Territory* targetTerritory = potentialTargets[randomIndex];
+
+	// 4. Implement the attack logic (replace with your actual attack implementation)
+	std::cout << "Attacking " << targetTerritory->getName() << " with a plane." << std::endl;
+	// Example attack logic: Reduce the forces in the target territory
+	int damage = 3; // Plane attacks with 3 forces
+	targetTerritory->AddForces(-damage, targetTerritory->getOwner());
+	std::cout << "The plane inflicted " << damage << " damage to " << targetTerritory->getName() << std::endl;
+
+	// 5. Check if the territory was conquered
+	if (targetTerritory->getForces() <= 0) {
+		std::cout << targetTerritory->getName() << " was conquered!" << std::endl;
+		// Implement logic to transfer ownership to the current player
+		targetTerritory->setOwner(currentPlayer);
+		targetTerritory->setForces(3);
+
+	}
+
+	// 6. Print the attack result
+	std::cout << "Attack completed." << std::endl;
+}
+
+
+/// <summary>
+/// This function moves forces from one territory to another using the plane.
+/// The player chooses the territory to move from and the amount to move.
+/// The function will randomly choose one of the player's territories and move the forces there.
+/// </summary>
+/// <param name="territoryToMoveFrom"></param>
+/// <param name="amountToMove"></param>
+void AxisGame::moveForcesWithPlane(Territory* territoryToMoveFrom, int amountToMove) {
+	// Check if the territory to move from is valid
+	if (territoryToMoveFrom == nullptr) {
+		std::cout << "The selected territory is invalid." << std::endl;
+		return;
+	}
+
+	// Check if the player owns the territory
+	if (territoryToMoveFrom->getOwner() != currentPlayer) {
+		std::cout << "You do not own this territory." << std::endl;
+		return;
+	}
+
+	// Check if there are enough forces to move
+	if (territoryToMoveFrom->getForces() < amountToMove || amountToMove <= 0) {
+		std::cout << "Not enough forces to move or invalid move amount." << std::endl;
+		return;
+	}
+
+	// Get a list of all territories owned by the player
+	std::vector<Territory*> ownedTerritories;
+	for (auto& pair : board.territories) {
+		Territory& territory = pair.second;
+		if (territory.getOwner() == currentPlayer && &territory != territoryToMoveFrom) {
+			ownedTerritories.push_back(&territory);
+		}
+	}
+
+	// Check if there are any valid territories to move to
+	if (ownedTerritories.empty()) {
+		std::cout << "No valid territories to move forces to." << std::endl;
+		return;
+	}
+
+	// Randomly select a target territory
+	int randomIndex = GetRandomValue(0, ownedTerritories.size() - 1);
+	Territory* targetTerritory = ownedTerritories[randomIndex];
+
+	// Move the forces
+	territoryToMoveFrom->AddForces(-amountToMove, currentPlayer); // Deduct forces
+	targetTerritory->AddForces(amountToMove, currentPlayer);      // Add forces
+
+	// Log the move
+	std::cout << "Moved " << amountToMove << " forces from "
+		<< territoryToMoveFrom->getName() << " to "
+		<< targetTerritory->getName() << " using the plane." << std::endl;
+}
+
+/// <summary>
 /// this function is handling the end game phase
 /// </summary>
 void AxisGame::handleEndGamePhase() {
@@ -471,6 +619,17 @@ void AxisGame::handleEndGamePhase() {
 void AxisGame::changePlayerTurn() {
 	currentPlayer = currentPlayer ^ 1;
 }
+
+
+bool AxisGame::checkVictory() {
+	for (const auto& pair : board.territories) {
+		if (pair.second.getOwner() != currentPlayer) {
+			return false;
+		}
+	}
+	return true;
+}
+
 
 /// <summary>
 /// This function is to build the map
@@ -511,7 +670,7 @@ void AxisGame::buildMap() {
 int main() {
 	float screen_width = 1088 /*GetScreenHeight()*/;
 	float  screen_height = 779.875/*GetScreenWidth()*/;
-	InitWindow(screen_width, screen_height, "Risk Game Map");
+	InitWindow(screen_width, screen_height, "Axis and Allies Game Map");
 	SetTargetFPS(140);
 
 	AxisGame game;

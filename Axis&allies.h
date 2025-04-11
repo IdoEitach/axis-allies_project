@@ -11,6 +11,9 @@
 #include "Dice.h"
 #include <algorithm>
 #include "Bot.h" 
+#include <cstdlib> 
+#include <ctime>   
+
 
 class Bot;
 
@@ -44,7 +47,10 @@ public:
     void handleEndGamePhase();
     void changePlayerTurn();
     void buildMap();
+    void attackWithPlane();
+	bool checkVictory();
 
+	void moveForcesWithPlane(Territory* territoryToMoveFrom ,int amountToMove);
 
 	
 };
