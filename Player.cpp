@@ -123,9 +123,15 @@ bool Player::getAttackedWithPlane() const {
 	return attackedWithPlane;
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="movedWithPlane"></param>
 void Player::setMovedWithPlane(bool movedWithPlane) {
 	this->movedWithPlane = movedWithPlane;
 }
+
+
 bool Player::getMovedWithPlane() const {
 	return movedWithPlane;
 }

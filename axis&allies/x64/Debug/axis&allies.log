@@ -1,10 +1,6 @@
-﻿  Bot.cpp
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(145,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(232,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(329,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(395,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Player.cpp
+﻿  Dice.cpp
   axis&allies.cpp
+C:\Users\ido\פרויקט\axis-allies_project\Dice.cpp(48,46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(525,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(594,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ido\פרויקט\axis-allies_project\axis&allies.cpp(673,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data

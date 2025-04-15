@@ -64,6 +64,7 @@ void Dice3D::Draw() {
 /// This function is to check if the dice is rolling
 /// </summary>
 /// <returns></returns>
+
 bool Dice3D::IsRolling() const {
     return rolling;
 }
