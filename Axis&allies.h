@@ -17,7 +17,7 @@
 
 class Bot;
 
-#define NUMBER_OF_TERRITORRIES 9
+#define NUMBER_OF_TERRITORRIES 16
 
 class AxisGame{
 public:
@@ -42,13 +42,13 @@ public:
     Territory* ChoosingTeritorryToAttackFrom(int* forcesToAttackWith);
     Territory* ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtackFrom, int& forcesToDefenceWith);
     Territory* chossingTerritoryToMoveFrom();
-    Territory* ChoosingTeritorryToMoveTo(Territory* chosenTeritorryToMoveFrom);
     void hanleReinforcement();
     void handleEndGamePhase();
     void changePlayerTurn();
     void buildMap();
     void attackWithPlane();
 	bool checkVictory();
+    std::vector<std::string> getOwnedContinents(int player);
 
 	void moveForcesWithPlane(Territory* territoryToMoveFrom ,int amountToMove);
 

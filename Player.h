@@ -30,7 +30,7 @@ public:
     void addForces(int amount);
     void deductForces(int amount);
     int getAmountOfForcesToAdd();
-    void setAmountOfForcesToAdd();
+    void setAmountOfForcesToAdd(const AxisBoard& board);
     void reinForcement(int amount, Territory* terrotiryPtr);
     int territoriesNeededForContinent(const AxisBoard& board, const std::string& continent) const; // Add this method
     void setAttackedWithPlane(bool attackedWithPlane);
@@ -39,7 +39,8 @@ public:
     void setMovedWithPlane(bool movedWithPlane);
 	bool getMovedWithPlane() const;
 
+	std::vector<std::string> getOwnedContinents(const AxisBoard& board) ;
 private:
 
-    int howMuchForcesToAdd();
+    int howMuchForcesToAdd(const AxisBoard& board);
 };

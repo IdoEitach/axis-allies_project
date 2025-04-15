@@ -1,4 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AxisGame">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="AxisGame::GamePhase" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Axis&amp;allies.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gAGACAAICgAABBAACAIABgAQAQAIADCAMAQAAAUAAAA=</HashCode>
+      <FileName>Axis&amp;allies.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AxisBoard">
+    <Position X="2.25" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgEQBwBAAiAAACACAACAgBpDABAABApAAAEJAAA=</HashCode>
+      <FileName>Axis&amp;alliesBoard.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bot">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQhgAAgAQBCAAAAIBIgQECUAAAIGICgEYBIACCCAAoA=</HashCode>
+      <FileName>Bot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dice3D">
+    <Position X="9.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUACABAIAAAAgAAAQAAoAAAIAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Dice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MessageManeger">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACABAAAgAAAAAAAAAQAAAAAUAAABAAAAABAAAEA=</HashCode>
+      <FileName>MessageManeger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player">
+    <Position X="10" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoAgAwAAAAIAAIQACAAEAAAAAIiIAAAEghVAAQABAkA=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateMachine">
+    <Position X="13.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAABAAAg=</HashCode>
+      <FileName>StateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Territory">
+    <Position X="14.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAg4oAABAAAAgQAAAAAAIAAgAAEEAACAAQAEgAAAAAM=</HashCode>
+      <FileName>Territory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Message">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAA=</HashCode>
+      <FileName>MessageManeger.h</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

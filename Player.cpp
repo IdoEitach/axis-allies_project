@@ -19,8 +19,8 @@ const std::vector<std::string>& Player::getTerritoriesOwned() const { return ter
 /// </summary>
 /// <param name="territory"></param>
 void Player::addTerritory(const std::string& territory) {
-    territoriesOwned.push_back(territory);
-    territoryCount++;
+	territoriesOwned.push_back(territory);
+	territoryCount++;
 }
 
 
@@ -29,8 +29,8 @@ void Player::addTerritory(const std::string& territory) {
 /// </summary>
 /// <param name="territory"></param>
 void Player::removeTerritory(const std::string& territory) {
-    territoriesOwned.erase(std::remove(territoriesOwned.begin(), territoriesOwned.end(), territory), territoriesOwned.end());
-    territoryCount = std::max(0, territoryCount - 1);
+	territoriesOwned.erase(std::remove(territoriesOwned.begin(), territoriesOwned.end(), territory), territoriesOwned.end());
+	territoryCount = std::max(0, territoryCount - 1);
 }
 
 
@@ -39,7 +39,7 @@ void Player::removeTerritory(const std::string& territory) {
 /// </summary>
 /// <param name="amount"></param>
 void Player::addForces(int amount) {
-    totalForces += amount;
+	totalForces += amount;
 }
 
 
@@ -48,8 +48,8 @@ void Player::addForces(int amount) {
 /// </summary>
 /// <param name="amount"></param>
 void Player::deductForces(int amount) {
-    totalForces -= amount;
-    if (totalForces < 0) totalForces = 0;
+	totalForces -= amount;
+	if (totalForces < 0) totalForces = 0;
 }
 
 
@@ -58,15 +58,15 @@ void Player::deductForces(int amount) {
 /// </summary>
 /// <returns></returns>
 int Player::getAmountOfForcesToAdd() {
-    return amountOfForcesToAdd;
+	return amountOfForcesToAdd;
 }
 
 
 /// <summary>
 /// This function is setting the amount of forces to add
 /// </summary>
-void Player::setAmountOfForcesToAdd() {
-    amountOfForcesToAdd = howMuchForcesToAdd();
+void Player::setAmountOfForcesToAdd(const AxisBoard& board) {
+	amountOfForcesToAdd = howMuchForcesToAdd(board);
 }
 
 
@@ -76,15 +76,15 @@ void Player::setAmountOfForcesToAdd() {
 /// <param name="amount"></param>
 /// <param name="territoryPtr"></param>
 void Player::reinForcement(int amount, Territory* territoryPtr) {
-    if (amount > amountOfForcesToAdd) {
-        std::cout << "you tried to add more than the amount you have so I added the max " << std::endl;
-        territoryPtr->AddForces(amountOfForcesToAdd, id);
+	if (amount > amountOfForcesToAdd) {
+		std::cout << "you tried to add more than the amount you have so I added the max " << std::endl;
+		territoryPtr->AddForces(amountOfForcesToAdd, id);
 		amountOfForcesToAdd = 0;
-        return;
-    }
-    amountOfForcesToAdd -= amount;
-    totalForces += amount;
-    territoryPtr->AddForces(amount, id);
+		return;
+	}
+	amountOfForcesToAdd -= amount;
+	totalForces += amount;
+	territoryPtr->AddForces(amount, id);
 }
 
 
@@ -92,8 +92,58 @@ void Player::reinForcement(int amount, Territory* territoryPtr) {
 /// This function is calculating how much forces to add
 /// </summary>
 /// <returns></returns>
-int Player::howMuchForcesToAdd() {
-	return std::max(3, territoryCount / 3);
+int Player::howMuchForcesToAdd(const AxisBoard& board) {
+	int howMuchToadd = 0;
+	howMuchToadd = std::max(3, territoryCount / 3);
+	std::cout << "doing the calculation of how much to add " << std::endl;
+	std::vector<std::string> ownedContinents = getOwnedContinents(board);
+	// checks if the player owns the north america continent
+	if (std::find(ownedContinents.begin(), ownedContinents.end(), "NORTAMERICA") != ownedContinents.end()) {
+		howMuchToadd += 5; // Assuming owning North America gives 5 additional forces
+	}
+	if (std::find(ownedContinents.begin(), ownedContinents.end(), "SOUTHAMERICA") != ownedContinents.end()) {
+		howMuchToadd += 2; // Assuming owning South America gives 2 additional forces
+	}
+	std::cout << "the amount of forces to add is: " << howMuchToadd << std::endl;
+	return howMuchToadd;
+}
+
+
+std::vector<std::string> Player::getOwnedContinents(const AxisBoard& board) {
+	std::unordered_map<std::string, std::vector<std::string>> continents; // Map of continents and their territories
+	std::vector<std::string> ownedContinents;
+
+	// Build the continents map from the board
+	for (const auto& pair : board.territories) {
+		const std::string& territoryName = pair.first;
+		const std::string& continentName = pair.second.getContinent();
+
+		continents[continentName].push_back(territoryName);
+	}
+
+	// Check ownership of each continent
+	for (const auto& pair : continents) {
+		const std::string& continentName = pair.first;
+		const std::vector<std::string>& territories = pair.second;
+
+		bool isOwned = true;
+		for (const auto& territoryName : territories) {
+			if (board.territories.at(territoryName).getOwner() != this->getId()) {
+				isOwned = false;
+				break;
+			}
+		}
+
+		if (isOwned) {
+			ownedContinents.push_back(continentName);
+		}
+	}
+	std::cout << "the owned continents are: " << std::endl;
+	for (const auto& continent : ownedContinents) {
+		std::cout << continent << std::endl;
+	}
+
+	return ownedContinents;
 }
 
 
@@ -104,21 +154,22 @@ int Player::howMuchForcesToAdd() {
 /// <param name="continent"></param>
 /// <returns></returns>
 int Player::territoriesNeededForContinent(const AxisBoard& board, const std::string& continent) const {
-    std::vector<Territory*> territoriesInContinent = board.getTerritoriesInContinent(continent);
-    int neededTerritories = 0;
+	std::vector<Territory*> territoriesInContinent = board.getTerritoriesInContinent(continent);
+	int neededTerritories = 0;
 
-    for (Territory* territory : territoriesInContinent) {
-        if (std::find(territoriesOwned.begin(), territoriesOwned.end(), territory->getName()) == territoriesOwned.end()) {
-            neededTerritories++;
-        }
-    }
-    return neededTerritories;
+	for (Territory* territory : territoriesInContinent) {
+		if (std::find(territoriesOwned.begin(), territoriesOwned.end(), territory->getName()) == territoriesOwned.end()) {
+			neededTerritories++;
+		}
+	}
+	return neededTerritories;
 }
 
 
 void Player::setAttackedWithPlane(bool attackedWithPlane) {
 	this->attackedWithPlane = attackedWithPlane;
 }
+
 bool Player::getAttackedWithPlane() const {
 	return attackedWithPlane;
 }

@@ -13,8 +13,8 @@ void Bot::clearGrades() {
 }
 
 
-int Bot::howMuchForcesToDefendWith(Territory & attackedTerritory){
-return attackedTerritory.getForces() > 2 ? 2 : attackedTerritory.getForces();
+int Bot::howMuchForcesToDefendWith(Territory * attackedTerritory){
+return attackedTerritory->getForces() > 2 ? 2 : attackedTerritory->getForces();
 }
 
 /// <summary>

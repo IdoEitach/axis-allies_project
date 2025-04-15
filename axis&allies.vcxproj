@@ -130,7 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="axis&amp;allies.cpp" />
+    <ClCompile Include="Axis&amp;allies.cpp" />
     <ClCompile Include="Axis&amp;alliesBoard.cpp" />
     <ClCompile Include="Bot.cpp" />
     <ClCompile Include="Dice.cpp" />
@@ -138,11 +138,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="Territory.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Axis&amp;allies.h" />
@@ -157,6 +152,9 @@
   <ItemGroup>
     <Image Include="..\..\..\97258\AppData\Local\Temp\tank.png" />
     <Image Include="..\..\..\97258\AppData\Local\Temp\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

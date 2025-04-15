@@ -121,7 +121,7 @@ void AxisGame::handlePlayingPhase() {
 		// first its reinforcement phase
 		// then its attack phase
 		std::cout << "in player 0 game phase" << std::endl;
-		player0.setAmountOfForcesToAdd();
+		player0.setAmountOfForcesToAdd(board);
 		int amountOfForcesToAdd = player0.getAmountOfForcesToAdd();
 		// reinforcement phase
 		bot->territoryToReinforce(amountOfForcesToAdd);
@@ -212,6 +212,7 @@ void AxisGame::handlePlayingPhase() {
 		float deltaTime = 0;
 		//reinforcement phase
 		hanleReinforcement();
+		std::string msg;
 		std::string input;
 		keepAttacking = board.drawYesNoMessageBox("Do you want to attack?");
 		std::cout << "keep attacking is: " << keepAttacking << std::endl;
@@ -268,8 +269,10 @@ void AxisGame::handlePlayingPhase() {
 					currentPlayer == player0.getId() ? player0.addForces(-1) : player1.addForces(-1);
 				}
 			}
+
 			if (chosenToAttack->getForces() == 0) {
 				std::cout << "haha we occuipied ur territory " << std::endl;
+				msg = "You have conquered " + chosenToAttack->getName() + "!";
 				chosenToAttack->setOwner(currentPlayer);
 				chosenToAttack->AddForces(forcesToAttackWith, currentPlayer);
 				chosenToAttackFrom->AddForces(-forcesToAttackWith, currentPlayer);
@@ -280,7 +283,12 @@ void AxisGame::handlePlayingPhase() {
 					return;
 				}
 			}
-			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking?");
+			else {
+				msg = "You have lost the battle for and lost forces " + chosenToAttack->getName() + "!";
+			}
+			std::cout << "sadadsadsadasdasdasd: " << keepAttacking << std::endl;
+
+			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking? \n "+msg);
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 
@@ -313,7 +321,7 @@ void AxisGame::handlePlayingPhase() {
 void AxisGame::hanleReinforcement() {
 	float deltaTime = 0;
 	std::cout << "in player 1 game phase" << std::endl;
-	player1.setAmountOfForcesToAdd();
+	player1.setAmountOfForcesToAdd(board);
 
 	while (player1.getAmountOfForcesToAdd() > 0) {
 		deltaTime = GetFrameTime();
@@ -454,7 +462,6 @@ Territory* AxisGame::chossingTerritoryToMoveFrom() {
 }
 
 
-
 /// <summary>
 /// This function is to choose Territory to attack
 /// </summary>
@@ -480,7 +487,7 @@ Territory* AxisGame::ChoosingTeritorryToAttack(Territory* chosenTeritorryToAtack
 		else if (clickTerritoryPtr != nullptr && clickTerritoryPtr->getOwner() != currentPlayer) {
 			for (auto& neighbor : board.adjacencyList[chosenTeritorryToAtackFrom->getName()]) {
 				if (neighbor == clickTerritoryPtr->getName()) {
-					forcesToDefenceWith = board.getInput(clickTerritoryPtr);
+					forcesToDefenceWith = bot->howMuchForcesToDefendWith(clickTerritoryPtr);
 					if (forcesToDefenceWith <= clickTerritoryPtr->getForces())
 						return clickTerritoryPtr;
 				}
@@ -632,6 +639,46 @@ bool AxisGame::checkVictory() {
 
 
 /// <summary>
+/// This function checks which continents the player owns. 
+/// It iterates through all territories and checks if the player owns all territories in each continent.
+/// </summary>
+/// <param name="player"></param>
+/// <returns>the contintes owned by the player</returns>
+std::vector<std::string> AxisGame::getOwnedContinents(int player) {
+	std::unordered_map<std::string, std::vector<std::string>> continents; // Map of continents and their territories
+	std::vector<std::string> ownedContinents;
+
+	// Build the continents map from the board
+	for (const auto& pair : board.territories) {
+		const std::string& territoryName = pair.first;
+		const std::string& continentName = pair.second.getContinent();
+
+		continents[continentName].push_back(territoryName);
+	}
+
+	// Check ownership of each continent
+	for (const auto& pair : continents) {
+		const std::string& continentName = pair.first;
+		const std::vector<std::string>& territories = pair.second;
+
+		bool isOwned = true;
+		for (const auto& territoryName : territories) {
+			if (board.territories.at(territoryName).getOwner() != player) {
+				isOwned = false;
+				break;
+			}
+		}
+
+		if (isOwned) {
+			ownedContinents.push_back(continentName);
+		}
+	}
+
+	return ownedContinents;
+}
+
+
+/// <summary>
 /// This function is to build the map
 /// the map is built by adding territories and borders
 /// </summary>
@@ -650,6 +697,15 @@ void AxisGame::buildMap() {
 	this->board.addTerritory("PERU", "SOUTHAMERICA", -1, 0, { 300, 550 }, ORANGE);
 	this->board.addTerritory("ARGENTINA", "SOUTHAMERICA", -1, 0, { 350, 600 }, ORANGE);
 
+
+	// Define Europe (Blue)
+	this->board.addTerritory("FRANCE", "EUROPE", -1, 0, { 900, 300 }, BLUE);
+	this->board.addTerritory("GERMANY", "EUROPE", -1, 0, { 1000, 300 }, BLUE);
+	this->board.addTerritory("ITALY", "EUROPE", -1, 0, { 1100, 300 }, BLUE);
+	this->board.addTerritory("SPAIN", "EUROPE", -1, 0, { 900, 400 }, BLUE);
+	this->board.addTerritory("UK", "EUROPE", -1, 0, { 800, 300 }, BLUE);
+	this->board.addTerritory("SWEDEN", "EUROPE", -1, 0, { 700, 200 }, BLUE);
+	this->board.addTerritory("NORWAY", "EUROPE", -1, 0, { 600, 150 }, BLUE);
 	// Define borders (example connections)
 	this->board.addBorder("ALASKA", "NORTH_WEST");
 	this->board.addBorder("NORTH_WEST", "ONTARIO");
@@ -662,14 +718,32 @@ void AxisGame::buildMap() {
 	this->board.addBorder("BRAZIL", "ARGENTINA");
 	this->board.addBorder("VENEZUELA", "ONTARIO");
 	this->board.addBorder("VENEZUELA", "QUEBEC");
+	this->board.addBorder("BRAZIL", "FRANCE");
+	this->board.addBorder("FRANCE", "GERMANY");
+	this->board.addBorder("GERMANY", "ITALY");
+	this->board.addBorder("GERMANY", "SWEDEN");
+	this->board.addBorder("SWEDEN", "NORWAY");
+	this->board.addBorder("NORWAY", "UK");
+	this->board.addBorder("NORWAY", "SWEDEN");
+	this->board.addBorder("SPAIN", "FRANCE");
+	this->board.addBorder("SPAIN", "GERMANY");
+	this->board.addBorder("SPAIN", "ITALY");
+	this->board.addBorder("SPAIN", "UK");
+	this->board.addBorder("SPAIN", "NORWAY");
+	this->board.addBorder("SPAIN", "BRAZIL");
+	this->board.addBorder("SPAIN", "PERU");
+	this->board.addBorder("SPAIN", "ARGENTINA");
+	this->board.addBorder("SPAIN", "GREENLAND");
 
+	
+	
 #pragma endregion
 }
 
 
 int main() {
-	float screen_width = 1088 /*GetScreenHeight()*/;
-	float  screen_height = 779.875/*GetScreenWidth()*/;
+	float screen_width = /*1088*/ GetScreenHeight();
+	float  screen_height = /*779.875*/GetScreenWidth();
 	InitWindow(screen_width, screen_height, "Axis and Allies Game Map");
 	SetTargetFPS(140);
 

@@ -293,7 +293,7 @@ void AxisBoard::drawForcesInfo() {
 			textColor = RED; // Highlight the selected territory
 
 		std::string info = territory.getName() + ": " + std::to_string(territory.getForces()) + " forces , owner : " + std::to_string(territory.getOwner());
-		DrawText(info.c_str(), 820, yOffset, 15, textColor);
+		DrawText(info.c_str(), 1200, yOffset, 15, textColor);
 		yOffset += 30; // Increment y offset for the next line
 	}
 }

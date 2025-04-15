@@ -20,7 +20,7 @@ public:
 	bool attackPhase(Territory*& attackingTerritory,
 		Territory*& attackedTerritory);
 	bool needToAttackWithPlane();
-	int howMuchForcesToDefendWith(Territory & attackedTerritory );
+	int howMuchForcesToDefendWith(Territory * attackedTerritory );
 	bool needToMoveForcesWithPlane();
 
 private:
