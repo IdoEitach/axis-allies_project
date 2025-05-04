@@ -13,8 +13,8 @@ void Bot::clearGrades() {
 }
 
 
-int Bot::howMuchForcesToDefendWith(Territory * attackedTerritory){
-return attackedTerritory->getForces() > 2 ? 2 : attackedTerritory->getForces();
+int Bot::howMuchForcesToDefendWith(Territory* attackedTerritory) {
+	return attackedTerritory->getForces() > 2 ? 2 : attackedTerritory->getForces();
 }
 
 /// <summary>
@@ -28,9 +28,7 @@ Territory* Bot::chosenTerritoryToInit() {
 	stateMachine.addTransition([this]() { return this->isContinentUnderThreatInit(); }, [this]() { this->handleContinentThreatInit(); });
 	stateMachine.addTransition([this]() { return true; }, [this]() { this->evaluateTerritoriesInit(); });
 	stateMachine.run();
-	stateMachine.removeTransition([this]() { return this->isMapIsEmpety(); });
-	stateMachine.removeTransition([this]() { return this->isContinentUnderThreatInit(); });
-	stateMachine.removeTransition([this]() { return true; });
+	stateMachine.clearTransitions();
 	std::cout << "Chosen territory: " << chosenTerritory->getName() << std::endl;
 	return chosenTerritory;
 }
@@ -79,16 +77,16 @@ bool Bot::isContinentUnderThreatInit() {
 /// </summary>
 /// <returns></returns>
 bool Bot::isMapIsEmpety() {
+	bool isMapEmpty = true;
 	std::cout << "is the map is empty? :" << std::endl;
 	for (const auto& pair : board->territories) {
 		const Territory& territory = pair.second;
 		if (territory.getOwner() != -1) {
-			std::cout << "no" << std::endl;
-			return false;
+			isMapEmpty = false;
 		}
 	}
-	std::cout << "yes" << std::endl;
-	return true;
+	isMapEmpty ? std::cout << "The map is empty" : std::cout << "The map is not empty" << std::endl;
+	return isMapEmpty;
 }
 
 
@@ -119,42 +117,42 @@ void Bot::handleContinentThreatInit() {
 	for (Territory* territory : continentTerritories) {
 		if (territory->getOwner() == -1) {
 			allOccupied = false;
-			break;
 		}
 	}
 
 	if (allOccupied) {
 		std::cout << "All territories in the continent are already occupied." << std::endl;
 		evaluateTerritoriesInit();
-		return;
 	}
+	else {
 
-	for (Territory* territory : continentTerritories) {
-		if (territory->getOwner() == -1) {
-			double grade = 0.0;
-			for (const std::string& adjName : board->adjacencyList[territory->getName()]) {
-				Territory& adjTerritory = board->territories[adjName];
-				if (adjTerritory.getOwner() == territory->getOwner()) {
-					grade += adjTerritory.getForces() * 0.5;
-					grade += 2.0;
+		for (Territory* territory : continentTerritories) {
+			if (territory->getOwner() == -1) {
+				double grade = 0.0;
+				for (const std::string& adjName : board->adjacencyList[territory->getName()]) {
+					Territory& adjTerritory = board->territories[adjName];
+					if (adjTerritory.getOwner() == territory->getOwner()) {
+						grade += adjTerritory.getForces() * 0.5;
+						grade += 2.0;
+					}
+					else {
+						grade -= 0.2;
+					}
 				}
-				else {
-					grade -= 0.2;
-				}
+				territory->setGrade(grade);
 			}
-			territory->setGrade(grade);
 		}
-	}
-	Territory* bestTerritory = nullptr;
-	double highestGrade = -std::numeric_limits<double>::infinity();
-	for (Territory* territory : continentTerritories) {
-		if (territory->getOwner() == -1 && territory->getGrade() > highestGrade) {
-			highestGrade = territory->getGrade();
-			bestTerritory = territory;
+		Territory* bestTerritory = nullptr;
+		double highestGrade = -std::numeric_limits<double>::infinity();
+		for (Territory* territory : continentTerritories) {
+			if (territory->getOwner() == -1 && territory->getGrade() > highestGrade) {
+				highestGrade = territory->getGrade();
+				bestTerritory = territory;
+			}
 		}
+		chosenTerritory = bestTerritory;
+		stateMachine.removeTransition([this]() { return this->isContinentUnderThreatInit(); });
 	}
-	chosenTerritory = bestTerritory;
-	stateMachine.removeTransition([this]() { return this->isContinentUnderThreatInit(); });
 }
 
 
@@ -246,12 +244,12 @@ void Bot::evaluateTerritoriesInit() {
 /// </summary>
 /// <returns></returns>
 Territory* Bot::territoryToReinforce(int forcesToReinforce) {
-	std::cout << "Reinforceing" << std::endl;
+	std::cout << "Reinforceing  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 	while (forcesToReinforce > 0) {
 		clearGrades();
 		givingUpTerritories.clear();
 		stateMachine.addTransition([this]() { return this->isTerritoryUnderThreatReinforce(); },
-			[this]() { this->handleContinentThreatReinforce(); });
+			[this]() { this->handleTerritoryUnderTheatReinforce(); });
 		stateMachine.addTransition([this]() { return this->isContinentUnderThreatReinforce(); },
 			[this]() { this->handleContinentThreatReinforce(); });
 		stateMachine.addTransition([this]() { return this->isTerritoryUndErencircle(); },
@@ -259,7 +257,7 @@ Territory* Bot::territoryToReinforce(int forcesToReinforce) {
 		stateMachine.addTransition([this]() { return true; },
 			[this]() { this->evaluateTerritoriesReinforce(); });
 		stateMachine.run();
-		chooseBestTerritoryToReinforce();
+
 		std::cout << "Chosen territory before adding: " << chosenTerritory->getName()
 			<< " amount of Forces: " << chosenTerritory->getForces() << std::endl;
 		// Determine how many forces to add based on the threat level and strategic importance
@@ -269,13 +267,51 @@ Territory* Bot::territoryToReinforce(int forcesToReinforce) {
 
 		std::cout << "Added " << howMuchToAdd << " forces to " << chosenTerritory->getName() << std::endl;
 
-		stateMachine.removeTransition([this]() { return this->isTerritoryUnderThreatReinforce(); });
-		stateMachine.removeTransition([this]() { return this->isContinentUnderThreatReinforce(); });
-		stateMachine.removeTransition([this]() { return this->isTerritoryUndErencircle(); });
-		stateMachine.removeTransition([this]() { return true; });
+		stateMachine.clearTransitions();
 	}
 	return chosenTerritory;
 }
+
+
+void Bot::handleTerritoryUnderTheatReinforce() {
+	std::cout << "Handling territory under threat... reinforce " << std::endl;
+
+	Territory* bestTerritory = nullptr;
+	int highestEnemyForcesSum = -1; // Initialize with a value lower than any possible sum
+
+	// Iterate through the territories under threat
+	for (const std::string& territoryName : territoriesUnderThreat) {
+		Territory& territory = board->territories[territoryName];
+		int enemyForcesSum = 0;
+
+		// Calculate the sum of forces of adjacent enemy territories
+		for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+			Territory& adjTerritory = board->territories[adjName];
+			if (adjTerritory.getOwner() == 1) { // Check if the adjacent territory is owned by the enemy
+				enemyForcesSum += adjTerritory.getForces();
+			}
+		}
+
+		// Update the best territory if this one has a higher sum of enemy forces
+		if (enemyForcesSum > highestEnemyForcesSum) {
+			highestEnemyForcesSum = enemyForcesSum;
+			bestTerritory = &territory;
+		}
+	}
+	// Set the chosen territory to the one with the highest sum of adjacent enemy forces
+	chosenTerritory = bestTerritory;
+
+	if (chosenTerritory != nullptr) {
+		std::cout << "Chosen territory: " << chosenTerritory->getName()
+			<< " with highest adjacent enemy forces sum: " << highestEnemyForcesSum << std::endl;
+
+		territoriesUnderThreat.clear(); // Clear the territories under threat after processing
+	}
+	else {
+		std::cout << "No territory chosen for reinforcement." << std::endl;
+	}
+}
+
 
 
 /// <summary>
@@ -335,6 +371,7 @@ void Bot::handleTerritoryUndErencircleReinforce() {
 	}
 	chosenTerritory = bestTerritory;
 	if (chosenTerritory != nullptr) {
+
 		std::cout << "Chosen territory: " << chosenTerritory->getName() << std::endl;
 	}
 	else {
@@ -351,13 +388,18 @@ void Bot::handleTerritoryUndErencircleReinforce() {
 void Bot::handleContinentThreatReinforce() {
 	std::vector<Territory*> continentTerritories = board->getTerritoriesInContinent(threatingContinent);
 
-	std::cout << "Handling continent threat..." << std::endl;
+	std::cout << "Handling continent threat... in the reinforce" << std::endl;
 	std::cout << "The continent under threat is: " << threatingContinent << std::endl;
 
 
 }
 
 
+/// <summary>
+/// This function is choosing the best territory to reinforce
+/// the bot will choose the territory with the highest grade
+/// the bot will not choose the territories that are giving up
+/// </summary>
 void Bot::chooseBestTerritoryToReinforce() {
 	double highestGrade = -std::numeric_limits<double>::infinity();
 	for (auto& pair : board->territories) {
@@ -380,7 +422,7 @@ void Bot::evaluateTerritoriesReinforce() {
 
 	for (auto& pair : board->territories) {
 		Territory& territory = pair.second;
-		if (territory.getOwner() == -1) {
+		if (territory.getOwner() == 0) {
 			double grade = 0.0;
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				Territory& adjTerritory = board->territories[adjName];
@@ -395,6 +437,7 @@ void Bot::evaluateTerritoriesReinforce() {
 			territory.setGrade(grade);
 		}
 	}
+	chooseBestTerritoryToReinforce();
 
 }
 
@@ -477,18 +520,36 @@ bool Bot::isContinentUnderThreatReinforce() {
 /// the idea is to check if the enemy has more than the forces in
 /// that territory in one of the adjacent territories
 bool Bot::isTerritoryUnderThreatReinforce() {
-	for (const std::string& adjName : board->adjacencyList[chosenTerritory->getName()]) {
-		Territory& adjTerritory = board->territories[adjName];
-		if (adjTerritory.getOwner() == 1) {
-			if (adjTerritory.getForces() >= chosenTerritory->getForces()) {
-				threatingTerritory = adjTerritory.getName();
-				return true;
+	bool anyTerritoryUnderThreat = false;
+
+	// Iterate through all territories owned by the bot
+	for (auto& pair : board->territories) {
+		Territory& territory = pair.second;
+
+		if (territory.getOwner() == 0) { // Check only bot-owned territories
+			bool isUnderThreat = false;
+
+			// Check all adjacent territories
+			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
+				Territory& adjTerritory = board->territories[adjName];
+
+				// Check if the adjacent territory is owned by the enemy and has more forces
+				if (adjTerritory.getOwner() == 1 && adjTerritory.getForces() > territory.getForces()) {
+					isUnderThreat = true;
+				}
+			}
+
+			// If the territory is under threat, add it to the list
+			if (isUnderThreat) {
+				anyTerritoryUnderThreat = true;
+				territoriesUnderThreat.push_back(territory.getName());
+				std::cout << "yes territory is under threat: " << territory.getName() << std::endl;
 			}
 		}
 	}
-	return false;
-}
 
+	return anyTerritoryUnderThreat;
+}
 
 /// <summary>
 /// The idea is to check if there is any territory the player ownes
@@ -496,18 +557,20 @@ bool Bot::isTerritoryUnderThreatReinforce() {
 /// </summary>
 /// <returns></returns>
 bool Bot::needToAttack() {
+	bool isTerritoryNeedToAttack = false;
 	for (const auto& pair : board->territories) {
 		const Territory& territory = pair.second;
-		if (territory.getOwner() == 0) { // אם הטריטוריה שייכת לבוט
+		if (territory.getOwner() == 0 && !isTerritoryNeedToAttack) {
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				const Territory& adjTerritory = board->territories[adjName];
 				if (adjTerritory.getOwner() == 1 && territory.getForces() >= 2 * adjTerritory.getForces()) { // אם הטריטוריה השכנה שייכת לאויב ויש לה פחות מחצי כוחות
-					return true;
+					isTerritoryNeedToAttack = true;
+
 				}
 			}
 		}
 	}
-	return false;
+	return isTerritoryNeedToAttack;
 }
 
 /// <summary>
@@ -534,8 +597,6 @@ bool Bot::attackPhase(Territory*& attackingTerritory, Territory*& attackedTerrit
 }
 
 
-
-
 /// <summary>
 /// This function checks if the bot has sufficient forces to attack
 /// if the bot territory has more than twice the forces in the enemy territory
@@ -552,8 +613,6 @@ bool Bot::hasSufficientForces(Territory* attackingTerritory, Territory* attacked
 /// <summary>
 /// This function chooses the best territory to attack from
 /// </summary>
-
-
 Territory* Bot::chooseTerritoryToAttackFrom() {
 	Territory* bestTerritory = nullptr;
 	double highestForces = -1; // Fixed initialization
@@ -561,20 +620,20 @@ Territory* Bot::chooseTerritoryToAttackFrom() {
 	for (auto& pair : board->territories) {
 		Territory& territory = pair.second;
 		if (territory.getOwner() == 0) {
-			// Check if the territory can attack any adjacent enemy territories
+			bool canAttack = false;
+
 			for (const std::string& adjName : board->adjacencyList[territory.getName()]) {
 				Territory& adjTerritory = board->territories[adjName];
 				if (adjTerritory.getOwner() == 1) {
-					// Found an enemy neighbor, check if we have enough forces
 					if (territory.getForces() >= 2 * adjTerritory.getForces()) {
-						// This territory can attack, check if it has more forces than the current best
-						if (territory.getForces() > highestForces) {
-							highestForces = territory.getForces();
-							bestTerritory = &territory;
-						}
-						break; // No need to check other neighbors if we can already attack
+						canAttack = true;
 					}
 				}
+			}
+
+			if (canAttack && territory.getForces() > highestForces) {
+				highestForces = territory.getForces();
+				bestTerritory = &territory;
 			}
 		}
 	}

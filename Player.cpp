@@ -104,46 +104,54 @@ int Player::howMuchForcesToAdd(const AxisBoard& board) {
 	if (std::find(ownedContinents.begin(), ownedContinents.end(), "SOUTHAMERICA") != ownedContinents.end()) {
 		howMuchToadd += 2; // Assuming owning South America gives 2 additional forces
 	}
+	if (std::find(ownedContinents.begin(), ownedContinents.end(), "EUROPE") != ownedContinents.end()) {
+		howMuchToadd += 7; // Assuming owning Europe gives 5 additional forces
+	}
 	std::cout << "the amount of forces to add is: " << howMuchToadd << std::endl;
 	return howMuchToadd;
 }
 
 
-std::vector<std::string> Player::getOwnedContinents(const AxisBoard& board) {
-	std::unordered_map<std::string, std::vector<std::string>> continents; // Map of continents and their territories
-	std::vector<std::string> ownedContinents;
+/// <summary>
+/// This function is getting the owned continents of the player
+/// the function is checking if the player owns all the territories in the continent
+/// if he does he owns the continent
+/// the function is returning the continents owned by the player
+/// </summary>
+/// <param name="board"></param>
+/// <returns></returns>
+std::vector<std::string> Player::getOwnedContinents(const AxisBoard& board) {  
+   std::unordered_map<std::string, std::vector<std::string>> continents; // Map of continents and their territories  
+   std::vector<std::string> ownedContinents;  
 
-	// Build the continents map from the board
-	for (const auto& pair : board.territories) {
-		const std::string& territoryName = pair.first;
-		const std::string& continentName = pair.second.getContinent();
+   // Build the continents map from the board  
+   for (const auto& pair : board.territories) {  
+       const std::string& territoryName = pair.first;  
+       const std::string& continentName = pair.second.getContinent();  
 
-		continents[continentName].push_back(territoryName);
-	}
+       continents[continentName].push_back(territoryName);  
+   }  
 
-	// Check ownership of each continent
-	for (const auto& pair : continents) {
-		const std::string& continentName = pair.first;
-		const std::vector<std::string>& territories = pair.second;
+   // Check ownership of each continent  
+   for (const auto& pair : continents) {  
+       const std::string& continentName = pair.first;  
+       const std::vector<std::string>& territories = pair.second;  
 
-		bool isOwned = true;
-		for (const auto& territoryName : territories) {
-			if (board.territories.at(territoryName).getOwner() != this->getId()) {
-				isOwned = false;
-				break;
-			}
-		}
+       bool isOwned = std::all_of(territories.begin(), territories.end(), [&](const std::string& territoryName) {  
+           return board.territories.at(territoryName).getOwner() == this->getId();  
+       });  
 
-		if (isOwned) {
-			ownedContinents.push_back(continentName);
-		}
-	}
-	std::cout << "the owned continents are: " << std::endl;
-	for (const auto& continent : ownedContinents) {
-		std::cout << continent << std::endl;
-	}
+       if (isOwned) {  
+           ownedContinents.push_back(continentName);  
+       }  
+   }  
 
-	return ownedContinents;
+   std::cout << "the owned continents are: " << std::endl;  
+   for (const auto& continent : ownedContinents) {  
+       std::cout << continent << std::endl;  
+   }  
+
+   return ownedContinents;  
 }
 
 
@@ -166,16 +174,25 @@ int Player::territoriesNeededForContinent(const AxisBoard& board, const std::str
 }
 
 
+/// <summary>
+/// This function is setting the attacked with plane value
+/// </summary>
+/// <param name="attackedWithPlane"></param>
 void Player::setAttackedWithPlane(bool attackedWithPlane) {
 	this->attackedWithPlane = attackedWithPlane;
 }
 
+
+/// <summary>
+/// This function is getting the attacked with plane value
+/// </summary>
+/// <returns></returns>
 bool Player::getAttackedWithPlane() const {
 	return attackedWithPlane;
 }
 
 /// <summary>
-/// 
+/// This function is setting the moved with plane
 /// </summary>
 /// <param name="movedWithPlane"></param>
 void Player::setMovedWithPlane(bool movedWithPlane) {
@@ -183,6 +200,10 @@ void Player::setMovedWithPlane(bool movedWithPlane) {
 }
 
 
+/// <summary>
+/// This function is getting the moved with plane value
+/// </summary>
+/// <returns></returns>
 bool Player::getMovedWithPlane() const {
 	return movedWithPlane;
 }

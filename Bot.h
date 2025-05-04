@@ -15,6 +15,7 @@ class Bot {
 
 public:
 	Bot(AxisBoard* board);
+	
 	Territory* chosenTerritoryToInit();
 	Territory* territoryToReinforce(int forcesToReinforce);
 	bool attackPhase(Territory*& attackingTerritory,
@@ -23,19 +24,18 @@ public:
 	int howMuchForcesToDefendWith(Territory * attackedTerritory );
 	bool needToMoveForcesWithPlane();
 
+
+
 private:
 
 	void clearGrades();
-
-
 	void evaluateTerritoriesInit();
 	void chooseBestTerritoryToInit();
 	void chooseBestTerritoryToReinforce();
 	void handleContinentThreatInit();
 	void handleEmptyMap();
-
-
 	void handleContinentThreatReinforce();
+	void handleTerritoryUnderTheatReinforce();
 	void handleTerritoryUndErencircleReinforce();
 	void evaluateTerritoriesReinforce();
 
@@ -46,16 +46,14 @@ private:
 	bool isContinentUnderThreatReinforce();
 	bool isTerritoryUnderThreatReinforce();
 	bool isTerritoryUndErencircle();
-
-
 	bool needToAttack();
 
 
 
 private:
-	bool isTerritorySuitableForAttack(Territory* territory);
+	
 	bool hasSufficientForces(Territory* attackingTerritory, Territory* attackedTerritory);
-	bool hasAdjacentEnemyTerritories(Territory* territory);
+
 	Territory* chooseTerritoryToAttackFrom();
 	Territory* chooseTerritoryToAttack(Territory* AttackingTerritory);
 
@@ -64,6 +62,7 @@ private:
 	AxisBoard* board;
 	StateMachine stateMachine;
 	Territory* chosenTerritory;
+	std::vector<std::string> territoriesUnderThreat;
 	std::string threatingContinent;
 	std::string threatingTerritory;
 	std::vector <std::string> givingUpTerritories;

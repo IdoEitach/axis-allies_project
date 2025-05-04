@@ -1,11 +1,11 @@
 ﻿#include "Axis&allies.h"
 
-
 // Update the constructor to initialize the bot
-AxisGame::AxisGame() : board(), bot(new Bot(&board)) { // Initialize bot with pointer to board
+AxisGame::AxisGame() : board(), bot(new Bot(&board)) {
 	// Other initializations
 	buildMap();
 }
+
 
 AxisGame::~AxisGame() {
 	delete bot; // Clean up bot
@@ -140,7 +140,7 @@ void AxisGame::handlePlayingPhase() {
 
 				board.setPhase(Phase::ChooseTerritoryToAttack);
 				int forcesToDefenceWith = board.getInput(attackedTerritory);
-				while (forcesToDefenceWith > 2 || forcesToDefenceWith > attackedTerritory->getForces()) {
+				while (forcesToDefenceWith > 2 || forcesToDefenceWith <= 0 || forcesToDefenceWith > attackedTerritory->getForces()) {
 					forcesToDefenceWith = board.getInput(attackedTerritory);
 					if (forcesToDefenceWith > attackedTerritory->getForces())
 					{
@@ -288,7 +288,7 @@ void AxisGame::handlePlayingPhase() {
 			}
 			std::cout << "sadadsadsadasdasdasd: " << keepAttacking << std::endl;
 
-			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking? \n "+msg);
+			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking? \n " + msg);
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
 		}
 
@@ -639,46 +639,6 @@ bool AxisGame::checkVictory() {
 
 
 /// <summary>
-/// This function checks which continents the player owns. 
-/// It iterates through all territories and checks if the player owns all territories in each continent.
-/// </summary>
-/// <param name="player"></param>
-/// <returns>the contintes owned by the player</returns>
-std::vector<std::string> AxisGame::getOwnedContinents(int player) {
-	std::unordered_map<std::string, std::vector<std::string>> continents; // Map of continents and their territories
-	std::vector<std::string> ownedContinents;
-
-	// Build the continents map from the board
-	for (const auto& pair : board.territories) {
-		const std::string& territoryName = pair.first;
-		const std::string& continentName = pair.second.getContinent();
-
-		continents[continentName].push_back(territoryName);
-	}
-
-	// Check ownership of each continent
-	for (const auto& pair : continents) {
-		const std::string& continentName = pair.first;
-		const std::vector<std::string>& territories = pair.second;
-
-		bool isOwned = true;
-		for (const auto& territoryName : territories) {
-			if (board.territories.at(territoryName).getOwner() != player) {
-				isOwned = false;
-				break;
-			}
-		}
-
-		if (isOwned) {
-			ownedContinents.push_back(continentName);
-		}
-	}
-
-	return ownedContinents;
-}
-
-
-/// <summary>
 /// This function is to build the map
 /// the map is built by adding territories and borders
 /// </summary>
@@ -699,12 +659,12 @@ void AxisGame::buildMap() {
 
 
 	// Define Europe (Blue)
-	this->board.addTerritory("FRANCE", "EUROPE", -1, 0, { 900, 300 }, BLUE);
+	this->board.addTerritory("FRANCE", "EUROPE", -1, 0, { 900, 350 }, BLUE);
 	this->board.addTerritory("GERMANY", "EUROPE", -1, 0, { 1000, 300 }, BLUE);
-	this->board.addTerritory("ITALY", "EUROPE", -1, 0, { 1100, 300 }, BLUE);
+	this->board.addTerritory("ITALY", "EUROPE", -1, 0, { 1100, 250 }, BLUE);
 	this->board.addTerritory("SPAIN", "EUROPE", -1, 0, { 900, 400 }, BLUE);
 	this->board.addTerritory("UK", "EUROPE", -1, 0, { 800, 300 }, BLUE);
-	this->board.addTerritory("SWEDEN", "EUROPE", -1, 0, { 700, 200 }, BLUE);
+	this->board.addTerritory("SWEDEN", "EUROPE", -1, 0, { 700, 220 }, BLUE);
 	this->board.addTerritory("NORWAY", "EUROPE", -1, 0, { 600, 150 }, BLUE);
 	// Define borders (example connections)
 	this->board.addBorder("ALASKA", "NORTH_WEST");
@@ -734,9 +694,15 @@ void AxisGame::buildMap() {
 	this->board.addBorder("SPAIN", "PERU");
 	this->board.addBorder("SPAIN", "ARGENTINA");
 	this->board.addBorder("SPAIN", "GREENLAND");
+	this->board.addBorder("SPAIN", "ALASKA");
+	this->board.addBorder("SPAIN", "NORTH_WEST");
+	this->board.addBorder("SPAIN", "ONTARIO");
+	this->board.addBorder("SPAIN", "QUEBEC");
 
-	
-	
+
+
+
+
 #pragma endregion
 }
 

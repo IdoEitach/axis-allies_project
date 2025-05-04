@@ -3,7 +3,7 @@
 #include <functional>
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
 
 class StateMachine {
 public:
@@ -14,6 +14,7 @@ public:
     void addTransition(ConditionFunction condition, ActionFunction action);
     void removeTransition(ConditionFunction condition);
     void run();
+	void clearTransitions() { transitions.clear(); } // Optional: Clear all transitions
 
 private:
     std::vector<std::pair<ConditionFunction, ActionFunction>> transitions;

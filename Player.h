@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include "Territory.h"
 #include "Axis&AlliesBoard.h"
 

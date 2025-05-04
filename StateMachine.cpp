@@ -24,18 +24,23 @@ void StateMachine::removeTransition(ConditionFunction condition) {
 		}), transitions.end());
 }
 
+
+
 /// <summary>
 /// this function runs the state machine 
 /// it goes through all the transitions and if the condition is true it executes the action
 /// </summary>
 void StateMachine::run() {
-	for (auto& pair : transitions) {
-		ConditionFunction condition = pair.first;
-		ActionFunction action = pair.second;
-		if (condition()) {
-			action();
-			break;
-		}
-	}
+    // Using find_if to find the first transition whose condition is true
+    auto it = std::find_if(transitions.begin(), transitions.end(),
+        [](const std::pair<ConditionFunction, ActionFunction>& transition) {
+            return transition.first();
+        });
+
+    // If a transition is found, execute its action
+    if (it != transitions.end()) {
+        it->second();
+    }
 }
+
 

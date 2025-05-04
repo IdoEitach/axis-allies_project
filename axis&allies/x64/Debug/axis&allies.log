@@ -1,1 +1,8 @@
-﻿  axis&allies.vcxproj -> C:\Users\ido\פרויקט\axis-allies_project\x64\Debug\axis&allies.exe
+﻿  Bot.cpp
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(142,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(230,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(365,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ido\פרויקט\axis-allies_project\Bot.cpp(437,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  axis&allies.vcxproj -> C:\Users\ido\פרויקט\axis-allies_project\x64\Debug\axis&allies.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
