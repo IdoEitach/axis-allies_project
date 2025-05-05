@@ -148,7 +148,7 @@ void AxisGame::handlePlayingPhase() {
 					}
 
 				}
-
+				int forecesFighting = 0;
 				std::vector<int> valueAttackers;
 				std::vector<int> valueDefenders;
 
@@ -170,8 +170,10 @@ void AxisGame::handlePlayingPhase() {
 					valueDefenders.push_back(GetRandomValue(1, 6));
 				}
 				std::sort(valueDefenders.begin(), valueDefenders.end(), std::greater<int>());
+				
+				forecesFighting = std::min(amountToAttackWith, forcesToDefenceWith);
 
-				for (int i = 0; i < forcesToDefenceWith; i++) {
+				for (int i = 0; i < forecesFighting; i++) {
 					std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
 					if (valueAttackers[i] > valueDefenders[i]) {
 						attackedTerritory->AddForces(-1, attackedTerritory->getOwner());
@@ -236,9 +238,10 @@ void AxisGame::handlePlayingPhase() {
 			board.setPhase(Phase::ChooseTerritoryToAttack);
 			//choose territory to attack
 			Territory* chosenToAttack = ChoosingTeritorryToAttack(chosenToAttackFrom, forcesToDefenceWith);
-
+			int forcesFighting = 0;
 			std::vector <int> valueAttackers;
 			std::vector <int> valueDefenders;
+
 			//rolling the cubes and getting who is the winner of the battle
 			board.RollCubes();
 
@@ -258,7 +261,8 @@ void AxisGame::handlePlayingPhase() {
 				valueDefenders.push_back(GetRandomValue(1, 6));
 			}
 			std::sort(valueDefenders.begin(), valueDefenders.end(), std::greater<int>());
-			for (int i = 0; i < forcesToDefenceWith; i++) {
+			forcesFighting = std::min(forcesToAttackWith, forcesToDefenceWith);
+			for (int i = 0; i < forcesFighting; i++) {
 				std::cout << "the value of the defender dice number " << i << " is: " << valueDefenders[i] << std::endl;
 				if (valueAttackers[i] > valueDefenders[i]) {
 					chosenToAttack->AddForces(-1, chosenToAttack->getOwner());
@@ -286,7 +290,7 @@ void AxisGame::handlePlayingPhase() {
 			else {
 				msg = "You have lost the battle for and lost forces " + chosenToAttack->getName() + "!";
 			}
-			std::cout << "sadadsadsadasdasdasd: " << keepAttacking << std::endl;
+			std::cout << "keep attackig is : " << keepAttacking << std::endl;
 
 			keepAttacking = board.drawYesNoMessageBox("Do you want to keep attacking? \n " + msg);
 			std::cout << "keep attacking is: " << keepAttacking << std::endl;
