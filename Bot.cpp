@@ -13,6 +13,12 @@ void Bot::clearGrades() {
 }
 
 
+/// <summary>
+/// This function is defending the territory that is under attack 
+/// it will choosr to defend with 2 or 1 forces
+/// </summary>
+/// <param name="attackedTerritory"></param>
+/// <returns></returns>
 int Bot::howMuchForcesToDefendWith(Territory* attackedTerritory) {
 	return attackedTerritory->getForces() > 2 ? 2 : attackedTerritory->getForces();
 }
@@ -273,6 +279,10 @@ Territory* Bot::territoryToReinforce(int forcesToReinforce) {
 }
 
 
+/// <summary>
+/// This function is handling the territory under threat in the reinforce phase
+/// the bot will choose the territory with the highest sum of forces in the adjacent territories that are under threat
+/// </summary>
 void Bot::handleTerritoryUnderTheatReinforce() {
 	std::cout << "Handling territory under threat... reinforce " << std::endl;
 

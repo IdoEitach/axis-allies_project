@@ -53,8 +53,7 @@
               "RelativeToolTip": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\vector",
               "ViewState": "AgIAAEkHAAAAAAAAAAAhwF8HAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-05-05T09:58:36.239Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T09:58:36.239Z"
             },
             {
               "$type": "Document",
@@ -66,8 +65,7 @@
               "RelativeToolTip": "Axis\u0026alliesBoard.cpp",
               "ViewState": "AgIAAOIAAAAAAAAAAAAAAC0BAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-05-05T09:26:12.82Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T09:26:12.82Z"
             },
             {
               "$type": "Document",
@@ -79,8 +77,7 @@
               "RelativeToolTip": "StateMachine.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-05-04T10:15:05.734Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T10:15:05.734Z"
             },
             {
               "$type": "Document",
@@ -88,9 +85,9 @@
               "Title": "Bot.cpp",
               "DocumentMoniker": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Bot.cpp",
               "RelativeDocumentMoniker": "Bot.cpp",
-              "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Bot.cpp*",
-              "RelativeToolTip": "Bot.cpp*",
-              "ViewState": "AgIAACcCAAAAAAAAAAAAAD4CAAAtAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ido\\\u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\\axis-allies_project\\Bot.cpp",
+              "RelativeToolTip": "Bot.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0CAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-16T13:11:26.832Z",
               "EditorCaption": ""
@@ -129,8 +126,7 @@
               "RelativeToolTip": "Axis\u0026allies.cpp",
               "ViewState": "AgIAAKIAAAAAAAAAAIAwwK8AAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-15T12:54:24.15Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-15T12:54:24.15Z"
             }
           ]
         }
